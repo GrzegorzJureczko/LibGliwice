@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% for library in libraries %}
+<div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title"><p>{{ library.name }}</p></h5>
+    <h6 class="card-subtitle mb-2 text-muted"><p>{{ library.address }}</p></h6>
+    <p class="card-text"></p>
+    <a href="#" class="card-link">Szczegóły</a>
+  </div>
+</div>
+
+    {% endfor %}
+
+
+
+
+
+
+{% endblock %}

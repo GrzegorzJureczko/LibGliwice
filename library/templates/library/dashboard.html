@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form method="post"> {% csrf_token %}
+  <div class="mb-3">
+    <label for="link" class="form-label">Wprowadż link</label>
+    <input type="text" class="form-control" name="link" id="link">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{{ books_availability }}
+
+{% endblock %}
+
