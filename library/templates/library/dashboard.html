@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% load library_extras %}
+
+
+
 <form method="post"> {% csrf_token %}
   <div class="mb-3">
     <label for="link" class="form-label">Wprowadż link</label>
@@ -8,8 +12,60 @@
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+<br>
 
-{{ books_availability }}
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Tytuł</th>
+      <th scope="col">Autor</th>
+        {% for library in libraries %}
+      <th scope="col">{{ library.short_name }}</th>
+        {% endfor %}
+    <th scope="col"></th>
+    </tr>
+  </thead>
+    <tbody>
+        {% for book in books %}
+            <tr>
+            <td>{{ forloop.counter }}</td>
+        <td>{{ book.name }}</td>
+        <td>{{ book.author }}</td>
+                {% for item in status|in_books:book %}
+            <td>{{ item.status }}</td>
+
+                    {% endfor %}
+            <td>usuń</td>
+        {% empty %}
+    <p>Lista jest pusta</p>
+            </tr>
+        {% endfor %}
+
+
+
+
+
+
+{#  <tbody>#}
+{#        {% for book_list in status_list %}#}
+{#    <tr>#}
+{#        <td>{{ forloop.counter }}</td>#}
+{#          {% for book in book_list %}#}
+{##}
+{#            <td>{{ book }}</td>#}
+{##}
+{#        {% endfor %}#}
+{#            <td>usuń</td>#}
+{#    </tr>#}
+{#        {% endfor %}#}
+
+
+  </tbody>
+</table>
+
+
 
 {% endblock %}
 

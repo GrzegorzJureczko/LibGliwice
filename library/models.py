@@ -13,12 +13,17 @@ class Libraries(models.Model):
     email = models.EmailField(max_length=30, default=None)
     opening_time = models.CharField(max_length=500, default=None)
 
+    def __str__(self):
+        return self.name
 
 class Books(models.Model):
     name = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
-    status = models.ManyToManyField('Libraries', through='BooksLibraries')
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    libraries = models.ManyToManyField('Libraries', through='BooksLibraries')
+  #  user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 
 
 class BooksLibraries(models.Model):
