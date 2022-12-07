@@ -5,6 +5,8 @@
 
 
 
+
+
 <form method="post"> {% csrf_token %}
   <div class="mb-3">
     <label for="link" class="form-label">Wprowadż link</label>
@@ -12,10 +14,12 @@
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+
+
 <br>
 
 
-<table class="table">
+<table class="table" >
   <thead>
     <tr>
       <th scope="col">#</th>
@@ -44,22 +48,6 @@
         {% endfor %}
 
 
-
-
-
-
-{#  <tbody>#}
-{#        {% for book_list in status_list %}#}
-{#    <tr>#}
-{#        <td>{{ forloop.counter }}</td>#}
-{#          {% for book in book_list %}#}
-{##}
-{#            <td>{{ book }}</td>#}
-{##}
-{#        {% endfor %}#}
-{#            <td>usuń</td>#}
-{#    </tr>#}
-{#        {% endfor %}#}
 
 
   </tbody>
