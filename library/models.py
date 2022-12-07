@@ -20,7 +20,7 @@ class Books(models.Model):
     name = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
     libraries = models.ManyToManyField('Libraries', through='BooksLibraries')
-  #  user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -28,10 +28,10 @@ class Books(models.Model):
 
 class BooksLibraries(models.Model):
     library = models.ForeignKey('Libraries', on_delete=models.CASCADE)
-    books = models.ForeignKey('Books', on_delete=models.CASCADE)
+    book = models.ForeignKey('Books', on_delete=models.CASCADE)
     status = models.IntegerField(choices=[
         (1, 'available'),
         (2, 'not_available'),
         (3, 'loan'),
     ])
-    place = models.CharField(max_length=30)
+    location = models.CharField(max_length=30)

@@ -1,57 +1,61 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% load library_extras %}
+    {% load library_extras %}
 
 
 
 
 
-<form method="post"> {% csrf_token %}
-  <div class="mb-3">
-    <label for="link" class="form-label">Wprowadż link</label>
-    <input type="text" class="form-control" name="link" id="link">
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+    <form method="post"> {% csrf_token %}
+        <div class="mb-3">
+            <label for="link" class="form-label">Wprowadż link z katalogu <a
+                    href="https://integro.biblioteka.gliwice.pl/catalog">INTEGRO</a></label>
+            <input type="text" class="form-control" name="link" id="link">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Wprowadź link</button>
+    </form>
 
 
-<br>
+    <br>
 
 
-<table class="table" >
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Tytuł</th>
-      <th scope="col">Autor</th>
-        {% for library in libraries %}
-      <th scope="col">{{ library.short_name }}</th>
-        {% endfor %}
-    <th scope="col"></th>
-    </tr>
-  </thead>
-    <tbody>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Tytuł</th>
+            <th scope="col">Autor</th>
+            {% for library in libraries %}
+                <th scope="col">{{ library.short_name }}</th>
+            {% endfor %}
+
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
         {% for book in books %}
             <tr>
-            <td>{{ forloop.counter }}</td>
-        <td>{{ book.name }}</td>
-        <td>{{ book.author }}</td>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ book.name }}</td>
+                <td>{{ book.author }}</td>
                 {% for item in status|in_books:book %}
-            <td>{{ item.status }}</td>
+                    <td>{{ item.status }}</td>
 
-                    {% endfor %}
-            <td>usuń</td>
-        {% empty %}
-    <p>Lista jest pusta</p>
+                {% endfor %}
+                <td>
+                    <button type="submit" class="btn btn-success">+</button>
+                </td>
+                <td><a href="{% url 'library:bookremove' id=book.id %}" class="btn btn-danger">Usuń</a></td>
+                {% empty %}
+                <p>Lista jest pusta</p>
             </tr>
         {% endfor %}
 
 
-
-
-  </tbody>
-</table>
+        </tbody>
+    </table>
 
 
 

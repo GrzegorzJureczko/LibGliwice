@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, redirect
 from django.views import View
 import requests
@@ -15,22 +14,23 @@ class Libraries(ListView):
     context_object_name = 'libraries'
 
 
-
-
 class Books_availability(View):
     def get(self, request):
-        #
+        user = request.user
         try:
             libraries = models.Libraries.objects.all()
-            books = models.Books.objects.all()
+            books = models.Books.objects.filter(user_id=user.id)
             status = models.BooksLibraries.objects.all()
         except:
             return render(request, 'library/dashboard.html')
 
-        return render(request, 'library/dashboard.html', context={'libraries': libraries, 'status':status, 'books':books})
+        return render(request, 'library/dashboard.html',
+                      context={'libraries': libraries, 'status': status, 'books': books})
 
     def post(self, request):
-        # retrieving from library database data about book availability
+        user = request.user
+
+        # retrieving from library database data about book availability using link provided by user
         url = request.POST.get('link')
         response = requests.get(str(url))
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -69,8 +69,6 @@ class Books_availability(View):
                 clean_books_availability.append(book)
                 short_name_list.append(book[0])
 
-
-
         # filling list with libraries where book is unavailable
         branch_list = [branch[0] for branch in clean_books_availability]
         for idx, item in enumerate(short_libraries_names_list):
@@ -78,7 +76,7 @@ class Books_availability(View):
                 clean_books_availability.insert(idx, (item, 'n/a', 'niedostępna'))
 
         # saving book
-        add_book = models.Books(name=title, author=auth)
+        add_book = models.Books(name=title, author=auth, user_id=user.id)
         add_book.save()
 
         # establishing relations and saving location and status
@@ -95,24 +93,21 @@ class Books_availability(View):
                 book_status = 3
 
             library = models.Libraries.objects.get(short_name=library_short_name)
-            relation = models.BooksLibraries (library=library, books=add_book, status=book_status, place=book_location)
+            relation = models.BooksLibraries(library=library, book=add_book, status=book_status, location=book_location)
             relation.save()
 
         return redirect('library:books_availability')
+
+
+class BookRemove(View):
+    def get(self, request, id):
+        book = models.Books.objects.get(id=id)
+        book.delete()
+        return redirect('library:books_availability')
+
 
 
 # https://integro.biblioteka.gliwice.pl/692300192868/twain-mark/pamietniki-adama-i-ewy?bibFilter=69'
 # https://integro.biblioteka.gliwice.pl/693000398890/sabaliauskaite-kristina/silva-rerum-ii?bibFilter=69'
 # https://integro.biblioteka.gliwice.pl/692700361185/zajdel-janusz-andrzej/limes-inferior?bibFilter=69'
 # https://integro.biblioteka.gliwice.pl/692300152237/pacynski-tomasz/maskarada?bibFilter=69'
-
-
-        # status_list = []
-        # for books in models.Books.objects.all():
-        #     book_availability_list = []
-        #     book_availability_list.append(books.name)
-        #     book_availability_list.append(books.author)
-        #     for library in libraries:
-        #         status = models.BooksLibraries.objects.get(library=library, books=books)
-        #         book_availability_list.append(status.status)
-        #     status_list.append(book_availability_list)
