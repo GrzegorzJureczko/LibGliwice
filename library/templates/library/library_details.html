@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="card" style="width: 18rem;">
+  <div class="card-header">
+   {{ library.name }}
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">skrócona nazwa: {{ library.short_name }}</li>
+    <li class="list-group-item">adres: {{ library.address }}</li>
+    <li class="list-group-item">telefon: {{ library.phone }}</li>
+    <li class="list-group-item">email: {{ library.email }}</li>
+    <li class="list-group-item">godziny otwarcia: {{ library.opening_time }}</li>
+  </ul>
+</div>
+
+
+
+{% endblock %}

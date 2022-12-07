@@ -4,4 +4,4 @@ register = template.Library()
 
 @register.filter
 def in_books(status, book):
-    return status.filter(books=book)
+    return status.filter(book=book)
