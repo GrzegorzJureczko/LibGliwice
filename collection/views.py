@@ -8,15 +8,10 @@ from collection import models
 class MyLibrary(View):
     def get(self, request):
         user = request.user
-        print(user)
-        print(user.id)
         read_books = models.Books.objects.filter(readbooks__read=1, readbooks__users=user.id)
-        # user_id=user.id, readbooks__read=1)
 
         return render(request, 'collection/mylibrary.html', context={'books': read_books})
 
-
-# context={'books':read_books}
 
 class BookCollectionAdd(View):
     def get(self, request, pk):
@@ -35,8 +30,13 @@ class BookCollectionAdd(View):
 
 
 class BookCollectionRemove(View):
-    def get(self, request):
+    def get(self, request, pk):
+        user = request.user
+        book = models.Books.objects.get(pk=pk)
+        models.ReadBooks.objects.get(users=user, book=book).delete()
 
+
+        print(book)
         return redirect('collection:my_library')
 
 
