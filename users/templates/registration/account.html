@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+Witaj, {{ user.username|default:'Guest' }}!
+
+<div>
+
+        <a href="{% url 'users:logout' %}">Wyloguj</a>
+        <a href="{% url 'users:password_change' %}">Zmień hasło</a>
+
+
+
+</div>
+{% endblock %}

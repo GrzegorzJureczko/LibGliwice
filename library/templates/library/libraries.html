@@ -12,9 +12,9 @@
     <h5 class="card-title"><p>{{ library.name }}</p></h5>
     <h6 class="card-subtitle mb-2 text-muted"><p>{{ library.address }}</p></h6>
     <p class="card-text"></p>
-    <a href="{% url 'library:libraries_details' pk=library.id %}" class="card-link">Szczegóły</a>
-      <a href="{% url 'library:libraries_modify' pk=library.id %}" class="card-link">Edytuj</a>
-      <a href="{% url 'library:libraries_remove' pk=library.id %}" class="card-link">Usuń</a>
+    <a href="{% url 'library:libraries_details' pk=library.id %}" class="btn btn-info">Szczegóły</a>
+      <a href="{% url 'library:libraries_modify' pk=library.id %}" class="btn btn-info">Edytuj</a>
+      <a href="{% url 'library:libraries_remove' pk=library.id %}" class="btn btn-danger">Usuń</a>
   </div>
 </div>
 
@@ -26,7 +26,7 @@
   <div class="card-body">
     <h6 class="card-subtitle mb-2 text-muted"><p>Dodaj filię</p></h6>
     <p class="card-text"></p>
-    <a href="{% url 'library:libraries_add' %}" class="card-link">Dodaj</a>
+    <a href="{% url 'library:libraries_add' %}" class="btn btn-success">Dodaj</a>
   </div>
 </div>
 </div>

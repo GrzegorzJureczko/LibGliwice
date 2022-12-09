@@ -60,7 +60,7 @@ class Books_availability(View):
         user = request.user
         try:
             libraries = models.Libraries.objects.all()
-            books = models.Books.objects.filter(user_id=user.id)
+            books = models.Books.objects.filter(user=user.id)
             status = models.BooksLibraries.objects.all()
         except:
             return render(request, 'library/dashboard.html')
@@ -94,10 +94,6 @@ class Books_availability(View):
             for idx in range(author.index('/') + 2, author.index('</')):
                 auth = auth + author[idx]
 
-        # checks book exists
-        if models.Books.objects.filter(name=title, user_id=user.id).exists():
-            return redirect('library:books_availability')
-
         # splitting branches and saving data to a list
         books_availability = []
         while len(branch) > 0:
@@ -118,9 +114,9 @@ class Books_availability(View):
 
         # filling list with libraries where book is unavailable
         branch_list = [branch[0] for branch in clean_books_availability]
-        for idx, item in enumerate(short_libraries_names_list):
+        for item in short_libraries_names_list:
             if item not in branch_list:
-                clean_books_availability.insert(idx, (item, 'n/a', 'niedostępna'))
+                clean_books_availability.append((item, 'n/a', 'niedostępna'))
 
         # ordering by database pattern
         list_order_pattern = {}
@@ -128,45 +124,109 @@ class Books_availability(View):
             list_order_pattern[i] = idx
         clean_books_availability.sort(key=lambda val: list_order_pattern[val[0]])
 
-        # saving book
-        add_book = models.Books(name=title, author=auth, user_id=user.id)
-        add_book.save()
+        if models.Books.objects.filter(name=title).exists():
+            for book in clean_books_availability:
+                library_short_name = book[0]
+                book_location = book[1]
+                book_status = book[2]
 
-        # establishing relations and saving location and status
-        for book in clean_books_availability:
-            library_short_name = book[0]
-            book_location = book[1]
-            book_status = book[2]
+                if book_status == 'dostępna':
+                    book_status = 1
+                elif book_status == 'Wypożyczona':
+                    book_status = 2
+                else:
+                    book_status = 3
 
-            if book_status == 'dostępna':
-                book_status = 1
-            elif book_status == 'Wypożyczona':
-                book_status = 2
-            else:
-                book_status = 3
+                add_book = models.Books.objects.get(name=title)
+                library = models.Libraries.objects.get(short_name=library_short_name)
+                model = models.BooksLibraries.objects.get(library=library, book=add_book)
+                model.status = book_status
+                model.location = book_location
+                model.save()
 
-            library = models.Libraries.objects.get(short_name=library_short_name)
-            relation = models.BooksLibraries(library=library, book=add_book, status=book_status, location=book_location)
-            relation.save()
+                add_book.user.add(user)
+
+        else:
+            # saving book
+            add_book = models.Books(name=title, author=auth)
+            add_book.save()
+
+            # establishing relations and saving location and status
+            for book in clean_books_availability:
+                library_short_name = book[0]
+                book_location = book[1]
+                book_status = book[2]
+
+                if book_status == 'dostępna':
+                    book_status = 1
+                elif book_status == 'Wypożyczona':
+                    book_status = 2
+                else:
+                    book_status = 3
+
+                library = models.Libraries.objects.get(short_name=library_short_name)
+                books_library_relation = models.BooksLibraries(library=library, book=add_book, status=book_status,
+                                                               location=book_location)
+                books_library_relation.save()
+
+            add_book.user.add(user)
 
         return redirect('library:books_availability')
 
 
 class BookRemove(View):
     def get(self, request, id):
+        user = request.user
         book = models.Books.objects.get(id=id)
-        book.delete()
+        book.user.remove(user)
+
         return redirect('library:books_availability')
 
 
 class BookRemoveAll(View):
     def get(self, request):
         user = request.user
-        books = models.Books.objects.filter(user_id=user.id)
-        books.delete()
+
+        books = models.Books.objects.all()
+        for book in books:
+            book.user.remove(user)
+
         return redirect('library:books_availability')
 
 # https://integro.biblioteka.gliwice.pl/692300192868/twain-mark/pamietniki-adama-i-ewy?bibFilter=69'
 # https://integro.biblioteka.gliwice.pl/693000398890/sabaliauskaite-kristina/silva-rerum-ii?bibFilter=69'
 # https://integro.biblioteka.gliwice.pl/692700361185/zajdel-janusz-andrzej/limes-inferior?bibFilter=69'
 # https://integro.biblioteka.gliwice.pl/692300152237/pacynski-tomasz/maskarada?bibFilter=69'
+#         # saving book
+#         if not models.Books.objects.filter(name=title).exists():
+#             book = models.Books(name=title, author=auth)
+#             book.save()
+#
+#         for book in clean_books_availability:
+#             library_short_name = book[0]
+#             book_location = book[1]
+#             book_status = book[2]
+#
+#             if book_status == 'dostępna':
+#                 book_status = 1
+#             elif book_status == 'Wypożyczona':
+#                 book_status = 2
+#             else:
+#                 book_status = 3
+#
+#             if models.Books.objects.filter(name=title).exists():
+#                 book = models.Books.objects.get(name=title)
+#                 library = models.Libraries.objects.get(short_name=library_short_name)
+#                 model = models.BooksLibraries.objects.get(library=library, book=book)
+#                 model.status = book_status
+#                 model.location = book_location
+#                 model.save()
+#             else:
+#                 library = models.Libraries.objects.get(short_name=library_short_name)
+#                 books_library_relation = models.BooksLibraries(library=library, book=book, status=book_status,
+#                                                                location=book_location)
+#                 books_library_relation.save()
+#
+#             book.user.add(user)
+#
+#         return redirect('library:books_availability')

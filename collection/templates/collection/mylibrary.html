@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+    {#    <a href="{% url 'collection:book_collection_add'  %}">Dodaj książkę</a>#}
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Tytuł</th>
+            <th scope="col">Autor</th>
+            <th scope="col">Data przeczytania</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for book in books %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ book.name }}</td>
+                <td>{{ book.author }}</td>
+                <td>{{ book.readbooks_set }}</td>
+                </td>
+                <td><a href="{% url 'library:bookremove' id=book.id %}" class="btn btn-danger">Usuń</a></td>
+            </tr>
+        {% empty %}
+            <p>Lista jest pusta</p>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+
+{% endblock %}

@@ -20,7 +20,8 @@ class Books(models.Model):
     name = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
     libraries = models.ManyToManyField('Libraries', through='BooksLibraries')
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ManyToManyField(User)
+
 
     def __str__(self):
         return self.name

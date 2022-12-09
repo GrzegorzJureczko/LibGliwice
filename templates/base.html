@@ -25,16 +25,17 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{% url 'library:books_availability' %}">Sprawdź dostępność</a>
         </li>
+      {% if user.is_authenticated %}
           <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{% url 'library:libraries' %}">Biblioteki</a>
         </li>
           <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Historia</a>
+          <a class="nav-link active" aria-current="page" href="{% url 'collection:my_library' %}">Moja biblioteka</a>
         </li>
-
+    {% endif %}
      {% if user.is_authenticated %}
          <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Konto</a>
+          <a class="nav-link active" aria-current="page" href="{% url 'users:user_account' %}">Konto</a>
         </li>
           <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{% url 'users:logout' %}">Wyloguj: {{ user }}</a>
