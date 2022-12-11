@@ -30,7 +30,7 @@
             <th scope="col">Tytuł</th>
             <th scope="col">Autor</th>
             {% for library in libraries %}
-                <th scope="col">{{ library.short_name }}</th>
+                <th scope="col"><a href="{% url 'library:summary' pk=library.id %}" class="text-black">{{ library.short_name }}</a></th>
             {% endfor %}
 
             <th scope="col"></th>

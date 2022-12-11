@@ -13,4 +13,5 @@ urlpatterns = [
     path('libraries/add/', views.LibrariesAdd.as_view(), name='libraries_add'),
     path('libraries/remove/<int:pk>', views.LibrariesRemove.as_view(), name='libraries_remove'),
     path('dashboard/remove/', views.BookRemoveAll.as_view(), name='book_remove_all'),
+    path('libraries/summary/<int:pk>', views.Summary.as_view(), name='summary'),
 ]

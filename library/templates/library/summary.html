@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load library_extras %}
+
+
+{% block content %}
+
+    <div class="card" style="width: 18rem;">
+        <div class="card-header">
+            {{ library.name }}
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">skrócona nazwa: {{ library.short_name }}</li>
+            <li class="list-group-item">adres: {{ library.address }}</li>
+            <li class="list-group-item">telefon: {{ library.phone }}</li>
+            <li class="list-group-item">email: {{ library.email }}</li>
+            <li class="list-group-item">godziny otwarcia: {{ library.opening_time }}</li>
+        </ul>
+    </div>
+
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Tytuł</th>
+            <th scope="col">Autor</th>
+            <th scope="col">Lokacja</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for book in books %}
+            <tr>
+                <th scope="row"> {{ forloop.counter }}</th>
+                <td> {{ book.name }}</td>
+                <td>{{ book.author }}</td>
+                {% for location in status|in_books:book|in_libraries:library %}
+                    <td>{{ location.location }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+
+{% endblock %}

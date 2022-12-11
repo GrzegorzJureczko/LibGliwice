@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load library_extras %}
 
 {% block content %}
 
@@ -21,9 +20,7 @@
                 <th scope="row">{{ forloop.counter }}</th>
                 <td>{{ book.name }}</td>
                 <td>{{ book.author }}</td>
-                {% for date in date_read|in_books:book|in_users:user %}
-                <td>{{ date.date }}</td>
-                {% endfor %}
+                <td>{{ book.readbooks_set }}</td>
                 <td><a href="{% url 'collection:book_collection_remove' pk=book.pk %}" class="btn btn-danger">Usuń</a></td>
             </tr>
         {% empty %}
@@ -32,6 +29,6 @@
 
         </tbody>
     </table>
-  <a href="{% url 'collection:book_collection_add_new'  %} " class="btn btn-info">Dodaj książkę</a>
+
 
 {% endblock %}

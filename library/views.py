@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.views import View
 import requests
 from bs4 import BeautifulSoup
-from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
+from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 
 from library import models
 
@@ -39,14 +39,38 @@ class LibrariesModify(UpdateView, PermissionRequiredMixin):
     success_url = reverse_lazy('library:libraries')
     permission_required = 'library.change_libraries'
 
+    # class LibrariesAdd(CreateView, PermissionRequiredMixin):
+    #     # Adds Library
+    #     model = models.Libraries
+    #     fields = ('name', 'short_name', 'address', 'phone', 'email', 'opening_time')
+    #     template_name = 'library/library_add.html'
+    #     success_url = reverse_lazy('library:libraries')
+    #     permission_required = 'library.add_libraries'
+    #     print('asd')
 
-class LibrariesAdd(CreateView, PermissionRequiredMixin):
-    # Adds Library
-    model = models.Libraries
-    fields = ('name', 'short_name', 'address', 'phone', 'email', 'opening_time')
-    template_name = 'library/library_add.html'
-    success_url = reverse_lazy('library:libraries')
-    permission_required = 'library.add_libraries'
+
+class LibrariesAdd(View):
+    def get(self, request):
+        return render(request, 'library/library_add.html')
+
+    def post(self, request):
+        name = request.POST.get('name')
+        short_name = request.POST.get('short_name')
+        address = request.POST.get('address')
+        phone = request.POST.get('phone')
+        email = request.POST.get('email')
+        opening_time = request.POST.get('opening_time')
+        library = models.Libraries(name=name, short_name=short_name, address=address, phone=phone, email=email,
+                                   opening_time=opening_time)
+        library.save()
+
+        books = models.Books.objects.all()
+        for book in books:
+            books_library_relation = models.BooksLibraries(library=library, book=book, status=3,
+                                                           location='n/a')
+            books_library_relation.save()
+
+        return redirect('library:libraries')
 
 
 class LibrariesRemove(DeleteView):
@@ -82,7 +106,6 @@ class Books_availability(View):
             author = str(author_sib.next_sibling.next_sibling)
         except:
             return redirect('library:books_availability')
-
         # retrieving book's author and title
         title = title.string
         if ';' in author:
@@ -192,6 +215,15 @@ class BookRemoveAll(View):
             book.user.remove(user)
 
         return redirect('library:books_availability')
+
+
+class Summary(View):
+    def get(self, request, pk):
+        user = request.user
+        library = models.Libraries.objects.get(id=pk)
+        books = models.Books.objects.filter(user=user.id, libraries=library, bookslibraries__status=1)
+        status = models.BooksLibraries.objects.all()
+        return render(request, 'library/summary.html', context={'library': library, 'books': books, 'status':status})
 
 # https://integro.biblioteka.gliwice.pl/692300192868/twain-mark/pamietniki-adama-i-ewy?bibFilter=69'
 # https://integro.biblioteka.gliwice.pl/693000398890/sabaliauskaite-kristina/silva-rerum-ii?bibFilter=69'

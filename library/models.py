@@ -4,7 +4,6 @@ from django.db import models
 
 # Create your models here.
 
-
 class Libraries(models.Model):
     name = models.CharField(max_length=60, unique=True)
     short_name = models.CharField(max_length=10, unique=True)
@@ -16,12 +15,12 @@ class Libraries(models.Model):
     def __str__(self):
         return self.name
 
+
 class Books(models.Model):
     name = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
     libraries = models.ManyToManyField('Libraries', through='BooksLibraries')
     user = models.ManyToManyField(User)
-
 
     def __str__(self):
         return self.name

@@ -2,13 +2,44 @@
 
 {% block content %}
 
-    <form action="" method="post">
-        {% csrf_token %}
-        <h3 class="text-center">Dodaj bibliotekę: {{ library.name }}</h3>
-
-        {{ form.as_p }}
-
-        <button type="submit" class="btn btn-success float-right btn-lg mb-3 mt-0">Dodaj</button>
+    <form method="post"> {% csrf_token %}
+  <div class="mb-3">
+    <label for="name" class="form-label">Nazwa</label>
+    <input type="text" class="form-control" id="name" aria-describedby="emailHelp" name="name">
+  </div>
+      <div class="mb-3">
+    <label for="short_name" class="form-label">Skrócona nazwa</label>
+    <input type="text" class="form-control" id="short_name" aria-describedby="emailHelp" name="short_name">
+  </div>
+      <div class="mb-3">
+    <label for="address" class="form-label">Adres</label>
+    <input type="text" class="form-control" id="address" aria-describedby="emailHelp" name="address">
+  </div>
+      <div class="mb-3">
+    <label for="phone" class="form-label">Telefon</label>
+    <input type="text" class="form-control" id="phone" aria-describedby="emailHelp" name="phone">
+  </div>
+      <div class="mb-3">
+    <label for="email" class="form-label">E-mail</label>
+    <input type="email" class="form-control" id="email" aria-describedby="emailHelp" name="email">
+  </div>
+      <div class="mb-3">
+    <label for="opening_time" class="form-label">Godziny otwarcia</label>
+    <input type="text" class="form-control" id="opening_time" aria-describedby="emailHelp" name="opening_time">
+  </div>
+    <button type="submit" class="btn btn-success float-right btn-lg mb-3 mt-0">Dodaj</button>
     </form>
 
+
 {% endblock %}
+
+{##}
+{##}
+{#    <form action="" method="post">#}
+{#        {% csrf_token %}#}
+{#        <h3 class="text-center">Dodaj bibliotekę: {{ library.name }}</h3>#}
+{##}
+{#        {{ form.as_p }}#}
+{##}
+{#        <button type="submit" class="btn btn-success float-right btn-lg mb-3 mt-0">Dodaj</button>#}
+{#    </form>#}

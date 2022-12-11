@@ -139,3 +139,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'library:books_availability'
 LOGOUT_REDIRECT_URL = 'home:home'
+
+
