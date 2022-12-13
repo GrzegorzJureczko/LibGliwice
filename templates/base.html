@@ -9,61 +9,62 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>LibGliwice {% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="{% static './css/bootstrap.min.css' %}">  <!-- link do staticów. ścieżka idzie od folderu static-->
-    <script src="{% static './js/bootstrap.min.js' %}" async defer></script>     <!-- asynchronicznie dociąga i parsuje js. HTML generuje sie wcześniej -->
+    <link rel="stylesheet" href="{% static './css/bootstrap.min.css' %}">
+    <!-- link do staticów. ścieżka idzie od folderu static-->
+    <script src="{% static './js/bootstrap.min.js' %}" async defer></script>
+    <!-- asynchronicznie dociąga i parsuje js. HTML generuje sie wcześniej -->
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-3">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="{% url 'home:home' %}">LibGliwice</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'library:books_availability' %}">Sprawdź dostępność</a>
-        </li>
-      {% if user.is_authenticated %}
-          <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'library:libraries' %}">Biblioteki</a>
-        </li>
-          <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'collection:my_library' %}">Moja biblioteka</a>
-        </li>
-    {% endif %}
-     {% if user.is_authenticated %}
-         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'users:user_account' %}">Konto</a>
-        </li>
-          <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'users:logout' %}">Wyloguj: {{ user }}</a>
-        </li>
-          {% else %}
-          <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'users:login' %}">Logowanie</a>
-        </li>
-            <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'users:signup' %}">Rejestracja</a>
-        </li>
-          {% endif %}
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'home:home' %}">LibGliwice</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'library:books_availability' %}">Sprawdź
+                        dostępność</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'library:libraries' %}">Biblioteki</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'collection:my_library' %}">Moja
+                            biblioteka</a>
+                    </li>
+                {% endif %}
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'users:user_account' %}">Konto</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page"
+                           href="{% url 'users:logout' %}">Wyloguj: {{ user }}</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'users:login' %}">Logowanie</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'users:signup' %}">Rejestracja</a>
+                    </li>
+                {% endif %}
 
 
-      </ul>
+            </ul>
 
+        </div>
     </div>
-  </div>
 </nav>
 
 {% block content %}
 
 {% endblock %}
-
-
-
-
-
 
 
 </body>

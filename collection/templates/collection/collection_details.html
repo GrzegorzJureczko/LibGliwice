@@ -2,33 +2,38 @@
 
 {% block content %}
 
+    <div class="container">
+        <div class="row">
+            <div class="col">
 
 
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tytuł</th>
+                        <th scope="col">Autor</th>
+                        <th scope="col">Data przeczytania</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for book in books %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ book.name }}</td>
+                            <td>{{ book.author }}</td>
+                            <td>{{ book.readbooks_set }}</td>
+                            <td><a href="{% url 'collection:book_collection_remove' pk=book.pk %}"
+                                   class="btn btn-danger">Usuń</a></td>
+                        </tr>
+                    {% empty %}
+                        <p>Lista jest pusta</p>
+                    {% endfor %}
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Tytuł</th>
-            <th scope="col">Autor</th>
-            <th scope="col">Data przeczytania</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for book in books %}
-            <tr>
-                <th scope="row">{{ forloop.counter }}</th>
-                <td>{{ book.name }}</td>
-                <td>{{ book.author }}</td>
-                <td>{{ book.readbooks_set }}</td>
-                <td><a href="{% url 'collection:book_collection_remove' pk=book.pk %}" class="btn btn-danger">Usuń</a></td>
-            </tr>
-        {% empty %}
-            <p>Lista jest pusta</p>
-        {% endfor %}
-
-        </tbody>
-    </table>
-
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

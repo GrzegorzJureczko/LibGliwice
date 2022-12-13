@@ -1,20 +1,44 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <table class="table width: 25%">
+                    <thead class="table-dark">
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">{{ library.name }}</th>
 
-<div class="card" style="width: 18rem;">
-  <div class="card-header">
-   {{ library.name }}
-  </div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item">skrócona nazwa: {{ library.short_name }}</li>
-    <li class="list-group-item">adres: {{ library.address }}</li>
-    <li class="list-group-item">telefon: {{ library.phone }}</li>
-    <li class="list-group-item">email: {{ library.email }}</li>
-    <li class="list-group-item">godziny otwarcia: {{ library.opening_time }}</li>
-  </ul>
-</div>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th scope="row">skrócona nazwa:</th>
+                        <td>{{ library.short_name }}</td>
 
+                    </tr>
+                    <tr>
+                        <th scope="row">adres:</th>
+                        <td>{{ library.address }}</td>
 
+                    </tr>
+                    <tr>
+                        <th scope="row">telefon:</th>
+                        <td>{{ library.phone }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">email:</th>
+                        <td>{{ library.email }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">godziny otwarcia:</th>
+                        <td>{{ library.opening_time }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

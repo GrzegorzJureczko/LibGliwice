@@ -3,44 +3,78 @@
 
 
 {% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <table class="table width: 25%">
+                    <thead class="table-dark">
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">{{ library.name }}</th>
 
-    <div class="card" style="width: 18rem;">
-        <div class="card-header">
-            {{ library.name }}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th scope="row">skrócona nazwa:</th>
+                        <td>{{ library.short_name }}</td>
+
+                    </tr>
+                    <tr>
+                        <th scope="row">adres:</th>
+                        <td>{{ library.address }}</td>
+
+                    </tr>
+                    <tr>
+                        <th scope="row">telefon:</th>
+                        <td>{{ library.phone }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">email:</th>
+                        <td>{{ library.email }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">godziny otwarcia:</th>
+                        <td>{{ library.opening_time }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+
+                <table class="table">
+                    <thead class="table-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tytuł</th>
+                        <th scope="col">Autor</th>
+                        <th scope="col">Lokacja</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if user.is_authenticated %}
+                        {% for book in books %}
+                            <tr>
+                                <th scope="row"> {{ forloop.counter }}</th>
+                                <td> {{ book.name }}</td>
+                                <td>{{ book.author }}</td>
+                                {% for location in status|in_books:book|in_libraries:library %}
+                                    <td>{{ location.location }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    </tbody>
+                </table>
+
+            </div>
         </div>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">skrócona nazwa: {{ library.short_name }}</li>
-            <li class="list-group-item">adres: {{ library.address }}</li>
-            <li class="list-group-item">telefon: {{ library.phone }}</li>
-            <li class="list-group-item">email: {{ library.email }}</li>
-            <li class="list-group-item">godziny otwarcia: {{ library.opening_time }}</li>
-        </ul>
     </div>
-
-
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Tytuł</th>
-            <th scope="col">Autor</th>
-            <th scope="col">Lokacja</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for book in books %}
-            <tr>
-                <th scope="row"> {{ forloop.counter }}</th>
-                <td> {{ book.name }}</td>
-                <td>{{ book.author }}</td>
-                {% for location in status|in_books:book|in_libraries:library %}
-                    <td>{{ location.location }}</td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-
+        <div class="container">
+        <div class="row">
+            <div class="col">
+                <img src="/static/images/libraries_location/{{ library.short_name }}.png">
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

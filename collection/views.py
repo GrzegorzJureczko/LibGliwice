@@ -24,6 +24,7 @@ class BookCollectionAdd(View):
         user = request.user
         book = models.Books.objects.get(pk=pk)
         date = request.POST.get('date')
+
         if not models.Books.objects.filter(name=book, readbooks__users=user).exists():
             read = models.ReadBooks(book=book, date=date, read=1)
             read.save()
@@ -47,7 +48,7 @@ class BookCollectionAddNew(View):
             read = models.ReadBooks(book=book, date=date, read=1)
             read.save()
             read.users.add(user)
-        return redirect('collection:my_library')
+        return render(request, 'collection/book_collection_add_new.html')
 
 
 class BookCollectionRemove(View):

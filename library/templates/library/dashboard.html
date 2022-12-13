@@ -23,7 +23,7 @@
     <br>
 
 
-    <table class="table">
+    <table class="table table-hover">
         <thead>
         <tr>
             <th scope="col">#</th>
@@ -37,6 +37,7 @@
         </tr>
         </thead>
         <tbody>
+ {% if user.is_authenticated %}
         {% for book in books %}
             <tr>
                 <td>{{ forloop.counter }}</td>
@@ -69,12 +70,12 @@
                 <td>
                 <td><a href="{% url 'collection:book_collection_add' pk=book.id %}" class="btn btn-success">+</a></td>
                 </td>
-                <td><a href="{% url 'library:bookremove' id=book.id %}" class="btn btn-danger">Usuń</a></td>
+                <td><a href="{% url 'library:book_remove' pk=book.id %}" class="btn btn-danger">Usuń</a></td>
             </tr>
         {% empty %}
             <p>Lista jest pusta</p>
         {% endfor %}
-
+{% endif %}
         </tbody>
     </table>
 

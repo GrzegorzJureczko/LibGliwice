@@ -10,9 +10,3 @@ class ReadBooks(models.Model):
 
     # def __str__(self):
     #     return self.book
-
-class Collection(models.Model):
-    users = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
-    description = models.CharField(max_length=100)
-    books = models.ManyToManyField(Books)
