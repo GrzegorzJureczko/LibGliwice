@@ -1,18 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <form method="POST"> {% csrf_token %}
+    <div class="p-3">
+        <form method="POST"> {% csrf_token %}
 
-                    Tytuł: <input type="text" name="title" value="{{ book.name }}">
-                    Autor: <input type="text" name="author" value="{{ book.author }}">
+            Tytuł: <input type="text" name="title" value="{{ book.name }}">
+            Autor: <input type="text" name="author" value="{{ book.author }}">
 
-                    Data przeczytania: <input type="date" name="date">
-                    <button type="submit" class="btn btn-primary">Dodaj</button>
-                </form>
-            </div>
-        </div>
+            Data przeczytania: <input type="date" name="date">
+            <button type="submit" class="btn btn-primary">Dodaj</button>
+        </form>
     </div>
+
 {% endblock %}

@@ -7,6 +7,7 @@ from collection import models
 # Create your views here.
 class MyLibrary(View):
     def get(self, request):
+        # displays books added by user marked as read
         user = request.user
         read_books = models.Books.objects.filter(readbooks__read=1, readbooks__users=user.id)
         date_read = models.ReadBooks.objects.all()
@@ -17,9 +18,11 @@ class MyLibrary(View):
 
 class BookCollectionAdd(View):
     def get(self, request, pk):
+        # displays form collecting date of book been read. User and book details already provided and hidden.
         book = models.Books.objects.get(pk=pk)
         return render(request, 'collection/book_collection_add.html', context={'book': book})
 
+        # adds connection m2m with user and readbook model what allows to make a list of books read by user
     def post(self, request, pk):
         user = request.user
         book = models.Books.objects.get(pk=pk)
@@ -35,9 +38,11 @@ class BookCollectionAdd(View):
 
 class BookCollectionAddNew(View):
     def get(self, request):
+        # displays form to add book marked as read which is not present on dashboard site
         return render(request, 'collection/book_collection_add_new.html')
 
     def post(self, request):
+        # saves data of new book and establishes connection in readbook model
         user = request.user
         title = request.POST.get('title')
         author = request.POST.get('author')
@@ -53,19 +58,9 @@ class BookCollectionAddNew(View):
 
 class BookCollectionRemove(View):
     def get(self, request, pk):
+        # removes book from books read by user
         user = request.user
         book = models.Books.objects.get(pk=pk)
         models.ReadBooks.objects.get(users=user, book=book).delete()
 
         return redirect('collection:my_library')
-
-    # def post(self, request, pk):
-    #     user = request.user
-    #     book = models.Books.objects.get(pk=pk)
-    #     date = request.POST.get('date')
-    #     if not models.ReadBooks.objects.filter(book=book, date=date, read=1).exists():
-    #         read = models.ReadBooks(book=book, date=date, read=1)
-    #         read.save()
-    #     else:
-    #         read = models.ReadBooks.objects.get(book=book, date=date, read=1)
-    #         read.users.add(user)

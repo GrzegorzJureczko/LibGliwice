@@ -6,5 +6,6 @@ import requests
 # Create your views here.
 
 class home(View):
+    # displays home page
     def get(self, request):
         return render(request, 'home/home.html')

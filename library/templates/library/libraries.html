@@ -1,35 +1,40 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="row row-cols-3 row-cols-md-2 g-4">
-    {% for library in libraries %}
+    <div class="p-5">
+        <div class="row row-cols-3 row-cols-md-2 g-4">
+            {% for library in libraries %}
 
 
 
 
-<div class="card" style="width: 18rem;">
-  <div class="card-body">
-    <h5 class="card-title"><p>{{ library.name }}</p></h5>
-    <h6 class="card-subtitle mb-2 text-muted"><p>{{ library.address }}</p></h6>
-    <p class="card-text"></p>
-    <a href="{% url 'library:libraries_details' pk=library.id %}" class="btn btn-info btn-sm">Szczegóły</a>
-      <a href="{% url 'library:libraries_modify' pk=library.id %}" class="btn btn-info btn-sm">Edytuj</a>
-      <a href="{% url 'library:libraries_remove' pk=library.id %}" class="btn btn-danger btn-sm">Usuń</a>
-  </div>
-</div>
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title"><p>{{ library.name }}</p></h5>
+                        <h6 class="card-subtitle mb-2 text-muted"><p>{{ library.address }}</p></h6>
+                        <p class="card-text"></p>
+                        <a href="{% url 'library:libraries_details' pk=library.id %}"
+                           class="btn btn-info btn-sm">Szczegóły</a>
+                        <a href="{% url 'library:libraries_modify' pk=library.id %}"
+                           class="btn btn-info btn-sm">Edytuj</a>
+                        <a href="{% url 'library:libraries_remove' pk=library.id %}"
+                           class="btn btn-danger btn-sm">Usuń</a>
+                    </div>
+                </div>
 
 
-    {% endfor %}
+            {% endfor %}
 
 
-<div class="card" style="width: 18rem;">
-  <div class="card-body">
-    <h6 class="card-subtitle mb-2 text-muted"><p>Dodaj filię</p></h6>
-    <p class="card-text"></p>
-    <a href="{% url 'library:libraries_add' %}" class="btn btn-success btn-sm">Dodaj</a>
-  </div>
-</div>
-</div>
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted"><p>Dodaj filię</p></h6>
+                    <p class="card-text"></p>
+                    <a href="{% url 'library:libraries_add' %}" class="btn btn-success btn-sm">Dodaj</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 {% endblock %}

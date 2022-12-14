@@ -1,15 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col">
+    <div class="p-3">
                 <form method="POST"> {% csrf_token %}
 
                     Data przeczytania: <input type="date" name="date">
                     <button type="submit" class="btn btn-primary">Dodaj</button>
                 </form>
             </div>
-        </div>
-    </div>
+
 {% endblock %}

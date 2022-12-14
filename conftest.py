@@ -78,3 +78,5 @@ def collection_relation(db, user):
     read_books_rel_1.users.add(user)
     read_books_rel_2.users.add(user)
     read_books_rel_3.users.add(user)
+
+

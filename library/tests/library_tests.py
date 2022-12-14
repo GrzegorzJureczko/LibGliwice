@@ -8,6 +8,12 @@ def test_libraries_page(client, user):
     endpoint = reverse('library:libraries')
     response = client.get(endpoint)
     assert response.status_code == 200
+
+
+def test_libraries_page_content(client, user):
+    client.force_login(user)
+    endpoint = reverse('library:libraries')
+    response = client.get(endpoint)
     assert 'Dodaj filię' in str(response.content.decode('UTF-8'))
 
 
@@ -53,7 +59,6 @@ def test_library_add_success(client, user):
     response = client.post(endpoint, data={'name': 'Filia 40', 'short_name': 'F40', 'address': 'ul. Polna 7',
                                            'phone': '554 778 889', 'email': 'filia40@gliwice.pl',
                                            'opening_time': 'Poniedziałek 8:00-20:00'})
-    library = models.Libraries.objects.all()
     assert models.Libraries.objects.get(name='Filia 40')
 
 
@@ -105,17 +110,17 @@ def test_book_availability_page(client, user):
     assert 'INTEGRO' in str(response.content.decode('UTF-8'))
 
 
-# def test_book_availability_form_success(client, user):
-#     client.force_login(user)
-#     endpoint = reverse('library:books_availability')
-#     response = client.post(endpoint, data={
-#         'link': 'https://integro.biblioteka.gliwice.pl/692300192868/twain-mark/pamietniki-adama-i-ewy?bibFilter=69'})
-#     response = client.post(endpoint, data={
-#         'link': 'https://integro.biblioteka.gliwice.pl/692700361185/zajdel-janusz-andrzej/limes-inferior?bibFilter=69'})
-#     response = client.post(endpoint, data={
-#         'link': 'https://integro.biblioteka.gliwice.pl/692300059720/herbert-frank/diuna?bibFilter=69'})
-#     books = models.Books.objects.all()
-#     assert len(books) == 3            ZAPYTANIA DO BAZY INTEGRO
+def test_book_availability_form_success(client, user):
+    client.force_login(user)
+    endpoint = reverse('library:books_availability')
+    response = client.post(endpoint, data={
+        'link': 'https://integro.biblioteka.gliwice.pl/692300192868/twain-mark/pamietniki-adama-i-ewy?bibFilter=69'})
+    response = client.post(endpoint, data={
+        'link': 'https://integro.biblioteka.gliwice.pl/692700361185/zajdel-janusz-andrzej/limes-inferior?bibFilter=69'})
+    response = client.post(endpoint, data={
+        'link': 'https://integro.biblioteka.gliwice.pl/692300059720/herbert-frank/diuna?bibFilter=69'})
+    books = models.Books.objects.all()
+    assert len(books) == 3
 
 
 def test_book_availability_form_fail(client, user):
@@ -127,15 +132,15 @@ def test_book_availability_form_fail(client, user):
     assert len(books) == 0
 
 
-# def test_book_availability_form_duplicate(client, user):
-#     client.force_login(user)
-#     endpoint = reverse('library:books_availability')
-#     response = client.post(endpoint, data={
-#         'link': 'https://integro.biblioteka.gliwice.pl/692300192868/twain-mark/pamietniki-adama-i-ewy?bibFilter=69'})
-#     response = client.post(endpoint, data={
-#         'link': 'https://integro.biblioteka.gliwice.pl/692300192868/twain-mark/pamietniki-adama-i-ewy?bibFilter=69'})
-#     books = models.Books.objects.all()
-#     assert len(books) == 1              ZAPYTANIA DO BAZY INTEGRO
+def test_book_availability_form_duplicate(client, user):
+    client.force_login(user)
+    endpoint = reverse('library:books_availability')
+    response = client.post(endpoint, data={
+        'link': 'https://integro.biblioteka.gliwice.pl/692300192868/twain-mark/pamietniki-adama-i-ewy?bibFilter=69'})
+    response = client.post(endpoint, data={
+        'link': 'https://integro.biblioteka.gliwice.pl/692300192868/twain-mark/pamietniki-adama-i-ewy?bibFilter=69'})
+    books = models.Books.objects.all()
+    assert len(books) == 1
 
 
 def test_book_remove_fail(client, user, book_user_relation_create):
@@ -197,14 +202,14 @@ def test_summary_page(client, library_create):
     endpoint = reverse('library:summary', args=(1,))
     response = client.get(endpoint)
     assert 'filia40@gliwice.pl' in str(response.content)
-    assert 200
+    assert response.status_code == 200
 
 
 def test_summary_page_displays_correct_data(client, user, book_library_relation_create):
     client.force_login(user)
     endpoint = reverse('library:summary', args=(1,))
     response = client.get(endpoint)
-    assert 200
+    assert response.status_code == 200
     assert 'Diuna' in str(response.content)
     assert '1984' not in str(response.content)
     assert 'eng' in str(response.content)

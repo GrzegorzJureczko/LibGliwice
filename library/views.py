@@ -59,7 +59,7 @@ class LibrariesAdd(LoginRequiredMixin, PermissionRequiredMixin, View):
                                        opening_time=opening_time)
             library.save()
 
-            # fills existing books with default data and save relation
+            # fills existing books with default data and save relation, needed for correct work with data already beeing used
             books = models.Books.objects.all()
             for book in books:
                 books_library_relation = models.BooksLibraries(library=library, book=book, status=3,
@@ -80,7 +80,7 @@ class LibrariesRemove(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
 
 
 class BooksAvailability(View):
-    # displays data filtered for proper user
+    # displays books related to libraries filtered for proper user. Only records desired by user
     def get(self, request):
         user = request.user
         libraries = models.Libraries.objects.all()
@@ -91,6 +91,7 @@ class BooksAvailability(View):
                       context={'libraries': libraries, 'status': status, 'books': books})
 
     def post(self, request):
+        # saves data of book availability in all libraries. Obtained data must be processed first
         user = request.user
 
         # retrieving data from library database about book availability using link provided by user
@@ -198,7 +199,7 @@ class BooksAvailability(View):
 
 
 class BookRemove(View):
-
+    # removes book availability data from dashboard indicated by user
     def get(self, request, pk):
         user = request.user
         book = models.Books.objects.get(pk=pk)
@@ -208,6 +209,7 @@ class BookRemove(View):
 
 
 class BookRemoveAll(View):
+    # removes all books availability data from dashboard
     def get(self, request):
         user = request.user
 
@@ -219,6 +221,7 @@ class BookRemoveAll(View):
 
 
 class Summary(View):
+    # shows library details with user's books of interest with accurate location. Only those which are available in this library
     def get(self, request, pk):
         user = request.user
         library = models.Libraries.objects.get(id=pk)
