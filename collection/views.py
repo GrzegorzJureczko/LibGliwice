@@ -53,7 +53,12 @@ class BookCollectionAddNew(View):
             read = models.ReadBooks(book=book, date=date, read=1)
             read.save()
             read.users.add(user)
-        return render(request, 'collection/book_collection_add_new.html')
+        else:
+            book = models.Books.objects.get(name=title, author=author)
+            read = models.ReadBooks(book=book, date=date, read=1)
+            read.save()
+            read.users.add(user)
+        return redirect('collection:my_library')
 
 
 class BookCollectionRemove(View):
