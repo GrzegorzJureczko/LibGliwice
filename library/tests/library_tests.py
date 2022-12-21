@@ -110,19 +110,6 @@ def test_book_availability_page(client, user):
     assert 'INTEGRO' in str(response.content.decode('UTF-8'))
 
 
-def test_book_availability_form_success(client, user):
-    client.force_login(user)
-    endpoint = reverse('library:books_availability')
-    response = client.post(endpoint, data={
-        'link': 'https://integro.biblioteka.gliwice.pl/692300192868/twain-mark/pamietniki-adama-i-ewy?bibFilter=69'})
-    response = client.post(endpoint, data={
-        'link': 'https://integro.biblioteka.gliwice.pl/692700361185/zajdel-janusz-andrzej/limes-inferior?bibFilter=69'})
-    response = client.post(endpoint, data={
-        'link': 'https://integro.biblioteka.gliwice.pl/692300059720/herbert-frank/diuna?bibFilter=69'})
-    books = models.Books.objects.all()
-    assert len(books) == 3
-
-
 def test_book_availability_form_fail(client, user):
     client.force_login(user)
     endpoint = reverse('library:books_availability')
@@ -130,17 +117,6 @@ def test_book_availability_form_fail(client, user):
         'link': 'incorrect link'})
     books = models.Books.objects.all()
     assert len(books) == 0
-
-
-def test_book_availability_form_duplicate(client, user):
-    client.force_login(user)
-    endpoint = reverse('library:books_availability')
-    response = client.post(endpoint, data={
-        'link': 'https://integro.biblioteka.gliwice.pl/692300192868/twain-mark/pamietniki-adama-i-ewy?bibFilter=69'})
-    response = client.post(endpoint, data={
-        'link': 'https://integro.biblioteka.gliwice.pl/692300192868/twain-mark/pamietniki-adama-i-ewy?bibFilter=69'})
-    books = models.Books.objects.all()
-    assert len(books) == 1
 
 
 def test_book_remove_fail(client, user, book_user_relation_create):
