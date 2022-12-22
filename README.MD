@@ -10,13 +10,12 @@ With this app in few steps you can find where your books are available in Gliwic
 ## Instalation
 * Clone the repository 
 ```
-$ git clone https://github.com/gocardless/sample-django-app.git
-$ cd sample-django-app
+$ git clone https://github.com/GrzegorzJureczko/LibGliwice.git
 ```
-* Create a virtual environment to install dependencies in and activate it:
+* Create virtual environment to install dependencies and activate it:
 ```
-$ virtualenv2 --no-site-packages env
-$ source env/bin/activate
+$ python -m venv venv
+$ source venv/bin/activate
 ```
 * Install the dependencies:
 ```
