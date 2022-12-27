@@ -2,15 +2,33 @@
 
 
 {% block content %}
-    <p style="text-align: center;">&nbsp;</p>
-    <p><img style="display: block; margin-left: auto; margin-right: auto;"
-            src="https://biblioteka.gliwice.pl/wp-content/uploads/2022/05/mbp_gliwice_logo.png"/></p>
-    <p style="text-align: center;">&nbsp;</p>
-    <h2 style="text-align: center;">Witaj na stronie LibGliwice!</h2>
-    <p style="text-align: center;">&nbsp;</p>
-    <p style="text-align: center;">Aby sprawdzić dostępność książek udaj się na stronę <a
-            href="https://integro.biblioteka.gliwice.pl/catalog">KATALOG INTEGRO</a></p>
-    <p style="text-align: center;">Wyszukaj interesującą Cię pozycję</p>
-    <p style="text-align: center;">Wklej link na stronie <a href="http://127.0.0.1:8000/dashboard/">LibGliwice</a></p>
+    <div style="text-align: center;" class="m-5">
+        <div>
+            <p><img style="display: block; margin-left: auto; margin-right: auto;"
+                    src="https://biblioteka.gliwice.pl/wp-content/uploads/2022/05/mbp_gliwice_logo.png"/></p>
+        </div>
+        <div  class="m-5">
+            <h2>Witaj na stronie LibGliwice!</h2>
+        </div>
+         {% if not user.is_authenticated %}
+        <div class="m-5">
+            <a href="{% url 'users:login' %}" class="btn btn-outline-primary btn-lg">Zaloguj się</a>
+            <a href="{% url 'users:signup' %}" class="btn btn-outline-primary btn-lg">Zarejestruj się</a>
+        </div>
+        {% endif %}
+        <div  class="m-5">
+
+            <a href="{% url 'home:instruction' %}" class="btn btn-outline-primary btn-lg">Zapoznaj się z instrukcją</a>
+        </div>
+
+        {#        <p style="text-align: center;">&nbsp;</p>#}
+        {#        <p style="text-align: center;">Aby sprawdzić dostępność książek udaj się na stronę <a#}
+        {#                href="https://integro.biblioteka.gliwice.pl/catalog">KATALOG INTEGRO</a></p>#}
+        {#        <p style="text-align: center;">Wyszukaj interesującą Cię pozycję</p>#}
+        {#        <p style="text-align: center;">Wklej link na stronie <a href="http://127.0.0.1:8000/dashboard/">LibGliwice</a></p>#}
+        {#        <p style="text-align: center;">Wklej link na stronie <a href="http://127.0.0.1:8000/dashboard/">LibGliwice</a></p>#}
+    </div>
+
+
 
 {% endblock %}

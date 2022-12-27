@@ -9,3 +9,9 @@ class home(View):
     # displays home page
     def get(self, request):
         return render(request, 'home/home.html')
+
+
+class instruction(View):
+    # displays instruction
+    def get(self, request):
+        return render(request, 'home/instruction.html')

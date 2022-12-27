@@ -76,7 +76,8 @@
                         <td><a href="{% url 'library:book_remove' pk=book.id %}" class="btn btn-danger">Usuń</a></td>
                     </tr>
                 {% empty %}
-                    <p>Lista jest pusta</p>
+
+                    <a class="text-bg-danger" href="{% url 'home:instruction' %}">Lista jest pusta, przeczytaj instrukcję</a>
                 {% endfor %}
             {% endif %}
             </tbody>
