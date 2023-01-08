@@ -19,6 +19,7 @@ class Libraries(models.Model):
 class Books(models.Model):
     name = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
+    pages = models.IntegerField(default=0)
     libraries = models.ManyToManyField('Libraries', through='BooksLibraries')
     user = models.ManyToManyField(User)
 

@@ -47,6 +47,7 @@
                         <th scope="col">#</th>
                         <th scope="col">Tytuł</th>
                         <th scope="col">Autor</th>
+                        <th scope="col">Strony</th>
                         <th scope="col">Lokacja</th>
                     </tr>
                     </thead>
@@ -57,6 +58,7 @@
                                 <th scope="row"> {{ forloop.counter }}</th>
                                 <td> {{ book.name }}</td>
                                 <td>{{ book.author }}</td>
+                                <td>{{ book.pages }}</td>
                                 {% for location in status|in_books:book|in_libraries:library %}
                                     <td>{{ location.location }}</td>
                                 {% endfor %}

@@ -87,7 +87,6 @@ class BooksAvailability(View):
         books = models.Books.objects.filter(user=user.id)
         status = models.BooksLibraries.objects.all()
 
-
         return render(request, 'library/dashboard.html',
                       context={'libraries': libraries, 'status': status, 'books': books})
 
@@ -104,19 +103,23 @@ class BooksAvailability(View):
             title = soup.find('h1')
             author_sib = soup.find('dt', text='Tytuł pełny:')
             author = str(author_sib.next_sibling.next_sibling)
+            pages_sib = soup.find('dt', text='Opis fizyczny:')
+            pages = str(pages_sib.next_sibling.next_sibling)
+
         except:
             return redirect('library:books_availability')
 
-        # retrieving book's author and title
-        title = title.string
-        if ';' in author:
-            auth = ''
-            for idx in range(author.index('/') + 2, author.index(';')):
-                auth = auth + author[idx]
+        # retrieving book's author, title and number of pages
+        if '[' in pages:
+            pages = pages[pages.index('">') + 2:pages.index(',')]
         else:
-            auth = ''
-            for idx in range(author.index('/') + 2, author.index('</')):
-                auth = auth + author[idx]
+            pages = pages[pages.index('">') + 2:pages.index('s.') - 1]
+        title = title.string
+        print(pages)
+        if ';' in author:
+            auth = author[author.index('/') + 2:author.index(';')]
+        else:
+            auth = author[author.index('/') + 2:author.index('</')]
 
         # splitting branches and saving data to a list
         books_availability = []
@@ -135,7 +138,6 @@ class BooksAvailability(View):
             if book[0] not in temporary_short_name_list and book[0] in short_libraries_names_list:
                 clean_books_availability.append(book)
                 temporary_short_name_list.append(book[0])
-        print(temporary_short_name_list)
 
         # filling list with libraries where book is unavailable
         branch_list = [branch[0] for branch in clean_books_availability]
@@ -151,7 +153,6 @@ class BooksAvailability(View):
 
         # if book already exists, preparing data, updating relation
         if models.Books.objects.filter(name=title).exists():
-            print(models.Books.objects.filter(name=title, user=user).exists())
             if models.Books.objects.filter(name=title, user=user).exists():
                 for book in clean_books_availability:
                     library_short_name = book[0]
@@ -168,8 +169,6 @@ class BooksAvailability(View):
                     add_book = models.Books.objects.get(name=title)
                     library = models.Libraries.objects.get(short_name=library_short_name)
                     book_libraries_relation = models.BooksLibraries.objects.get(library=library, book=add_book)
-                    print(book_libraries_relation.status)
-                    print(book_status)
 
                     if book_libraries_relation.status == 3:
                         book_libraries_relation.status = book_status
@@ -203,7 +202,7 @@ class BooksAvailability(View):
                     add_book.user.add(user)
         else:
             # if book doesn't exist, saving book
-            add_book = models.Books(name=title, author=auth)
+            add_book = models.Books(name=title, author=auth, pages=pages)
             add_book.save()
 
             # preparing data, establishing relation
