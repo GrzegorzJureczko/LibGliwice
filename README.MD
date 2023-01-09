@@ -1,5 +1,8 @@
 # LibGliwice
 ### https://libgliwice.pythonanywhere.com/
+###### username: demo
+###### password: TestPass123
+
 With this app in few steps you can find where your books are available in Gliwice's library branches. It allows you to plan your visit so you will find all your books in one branch. No need to waste your time by collecting them one by one. 
 
 ## Features
