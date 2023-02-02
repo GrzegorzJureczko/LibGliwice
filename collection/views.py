@@ -32,6 +32,7 @@ class BookCollectionAdd(View):
             read = models.ReadBooks(book=book, date=date, read=1)
             read.save()
             read.users.add(user)
+            book.user.remove(user)
 
         return redirect('collection:my_library')
 
