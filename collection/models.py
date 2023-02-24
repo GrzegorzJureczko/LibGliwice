@@ -8,3 +8,6 @@ class ReadBooks(models.Model):
     book = models.ForeignKey(Books, on_delete=models.CASCADE)
     date = models.DateField()
     read = models.BooleanField(default=0)
+
+    def __str__(self):
+        return f'{self.users.get()}, {self.book}'

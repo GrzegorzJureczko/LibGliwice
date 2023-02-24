@@ -36,3 +36,6 @@ class BooksLibraries(models.Model):
         (3, 'loan'),
     ])
     location = models.CharField(max_length=30)
+
+    def __str__(self):
+        return f'{self.library}, {self.book}, {self.status}'
