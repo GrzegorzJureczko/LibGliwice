@@ -42,12 +42,19 @@ class BookCollectionAddNew(View):
         # displays form to add book marked as read which is not present on dashboard site
         return render(request, 'collection/book_collection_add_new.html')
 
-    def post(self, request):
+    def post(self, request, random_book=None):
         # saves data of new book and establishes connection in readbook model
         user = request.user
-        title = request.POST.get('title')
-        author = request.POST.get('author')
-        date = request.POST.get('date')
+        if not random_book:
+            title = request.POST.get('title')
+            author = request.POST.get('author')
+            date = request.POST.get('date')
+        else:
+            title = random_book['title']
+            author = random_book['author']
+            date = random_book['date']
+
+
         if not models.Books.objects.filter(name=title, author=author).exists():
             book = models.Books(name=title, author=author)
             book.save()
