@@ -6,6 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 
+
 from library import models
 from library.forms import LibraryCreateForm
 
@@ -90,13 +91,14 @@ class BooksAvailability(View):
         return render(request, 'library/dashboard.html',
                       context={'libraries': libraries, 'status': status, 'books': books})
 
-    def post(self, request):
+    def post(self, request, url=None):
         # saves data of book availability in all libraries. Obtained data must be processed first
         user = request.user
-
         # retrieving data from library database about book availability using link provided by user
+
         try:
-            url = request.POST.get('link')
+            if not url: # checks if url is set by user or url comes with random urls from demo version
+                url = request.POST.get('link')
             response = requests.get(str(url))
             soup = BeautifulSoup(response.text, 'html.parser')
             branch = soup.find_all('b')
@@ -258,3 +260,4 @@ class Summary(View):
         books = models.Books.objects.filter(user=user.id, libraries=library, bookslibraries__status=1)
         status = models.BooksLibraries.objects.all()
         return render(request, 'library/summary.html', context={'library': library, 'books': books, 'status': status})
+
