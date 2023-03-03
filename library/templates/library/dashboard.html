@@ -14,7 +14,7 @@
                     <input type="text" class="form-control" name="link" id="link">
                 </div>
 
-                <button type="submit" class="btn btn-primary">Wprowadź link</button>
+                <button type="submit" class="btn btn-primary" name="books_availability">Wprowadź link</button>
             </form>
         {% else %}
             <a href="{% url 'users:login' %}" class="btn btn-info">Zaloguj się, aby móc korzystać z aplikacji</a><br>
@@ -69,16 +69,30 @@
                             {% endif %}
                         {% endfor %}
                         <td>
-                        <td><a href="{% url 'collection:book_collection_add' pk=book.id %}"
-                               class="btn btn-success">+</a>
+                        <td><a href="#"
+{#                               {% url 'collection:book_collection_add' pk=book.id %}#}
+                               class="btn btn-success" id="add_btn_{{ forloop.counter }}">+</a>
                         </td>
                         </td>
                         <td><a href="{% url 'library:book_remove' pk=book.id %}" class="btn btn-danger">Usuń</a></td>
                     </tr>
+                    <tr class="d-none flex" id="add_comp_{{ forloop.counter }}">
+                               <td colspan="25">
+                            <div>
+                                <form method="POST" action="{% url 'collection:book_collection_add' pk=book.id %}"> {% csrf_token %}
+
+                                    Data przeczytania: <input type="date" name="date">
+                                    <button type="submit" class="btn btn-primary" name="book_add">Dodaj</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+
                 {% empty %}
 
                     <a class="text-bg-danger" href="{% url 'home:instruction' %}">Lista jest pusta, przeczytaj
                         instrukcję</a>
+
                 {% endfor %}
             {% endif %}
             </tbody>

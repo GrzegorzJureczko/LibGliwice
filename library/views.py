@@ -8,6 +8,7 @@ from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 
 
 from library import models
+from collection import models as c_models
 from library.forms import LibraryCreateForm
 
 
@@ -94,8 +95,9 @@ class BooksAvailability(View):
     def post(self, request, url=None):
         # saves data of book availability in all libraries. Obtained data must be processed first
         user = request.user
-        # retrieving data from library database about book availability using link provided by user
 
+
+        # retrieving data from library database about book availability using link provided by user
         try:
             if not url: # checks if url is set by user or url comes with random urls from demo version
                 url = request.POST.get('link')
@@ -117,7 +119,6 @@ class BooksAvailability(View):
         else:
             pages = pages[pages.index('">') + 2:pages.index('s.') - 1]
         title = title.string
-        print(pages)
         if ';' in author:
             auth = author[author.index('/') + 2:author.index(';')]
         else:
