@@ -35,7 +35,18 @@
 
                     </tbody>
                 </table>
-                <a href="{% url 'collection:book_collection_add_new' %} " class="btn btn-info">Dodaj książkę</a>
+{#                <a href="{% url 'collection:book_collection_add_new' %} " class="btn btn-info">Dodaj książkę</a>#}
+                <button class="btn btn-info" id="new_book_form_button">Dodaj książkę</button>
+                <div class="p-3 d-none" id="new_book_form">
+                    <form method="POST" action="{% url 'collection:book_collection_add_new' %}"> {% csrf_token %}
+
+                        Tytuł: <input type="text" name="title" value="{{ book.name }}">
+                        Autor: <input type="text" name="author" value="{{ book.author }}">
+
+                        Data przeczytania: <input type="date" name="date">
+                        <button type="submit" class="btn btn-primary">Dodaj</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

@@ -89,8 +89,9 @@ class BooksAvailability(View):
         books = models.Books.objects.filter(user=user.id)
         status = models.BooksLibraries.objects.all()
 
+        books_len = len(books) + 1 # passes variable for js purpose. Book add to my library feature
         return render(request, 'library/dashboard.html',
-                      context={'libraries': libraries, 'status': status, 'books': books})
+                      context={'libraries': libraries, 'status': status, 'books': books, 'books_len':books_len})
 
     def post(self, request, url=None):
         # saves data of book availability in all libraries. Obtained data must be processed first

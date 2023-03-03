@@ -3,8 +3,6 @@
 {% block content %}
     {% load library_extras %}
 
-
-
     <div class="p-3">
         {% if user.is_authenticated %}
             <form method="post"> {% csrf_token %}
@@ -87,6 +85,7 @@
                             </div>
                         </td>
                     </tr>
+                    <input type="hidden" id="booksLen" name="booksLen" value="{{ books_len }}">
 
                 {% empty %}
 

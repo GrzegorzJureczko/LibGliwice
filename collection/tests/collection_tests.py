@@ -40,12 +40,12 @@ def test_book_collection_add_redirect(book_user_relation_create, user, client):
     assert response.url.startswith('/collection/')
 
 
-def test_book_collection_page(book_user_relation_create, user, client):
-    client.force_login(user)
-    endpoint = reverse('collection:book_collection_add', args=(1,))
-    response = client.get(endpoint)
-    assert "Data przeczytania" in str(response.content)
-
+# def test_book_collection_page(book_user_relation_create, user, client):
+#     client.force_login(user)
+#     endpoint = reverse('collection:book_collection_add', args=(1,))
+#     response = client.get(endpoint)
+#     assert "Data przeczytania" in str(response.content)
+# endpoint no longer exist
 
 def test_collection_new_add_success(user, client):
     client.force_login(user)
@@ -55,11 +55,12 @@ def test_collection_new_add_success(user, client):
     assert models.Books.objects.get(name='Testamenty')
 
 
-def test_collection_new_add_page(user, client):
-    client.force_login(user)
-    endpoint = reverse('collection:book_collection_add_new')
-    response = client.get(endpoint)
-    assert response.status_code == 200
+# def test_collection_new_add_page(user, client):
+#     client.force_login(user)
+#     endpoint = reverse('collection:book_collection_add_new')
+#     response = client.get(endpoint)
+#     assert response.status_code == 200
+# endpoint no longer exist
 
 
 def test_collection_new_add_remove(user, client):
