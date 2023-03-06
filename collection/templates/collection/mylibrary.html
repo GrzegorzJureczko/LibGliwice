@@ -35,7 +35,6 @@
 
                     </tbody>
                 </table>
-{#                <a href="{% url 'collection:book_collection_add_new' %} " class="btn btn-info">Dodaj książkę</a>#}
                 <button class="btn btn-info" id="new_book_form_button">Dodaj książkę</button>
                 <div class="p-3 d-none" id="new_book_form">
                     <form method="POST" action="{% url 'collection:book_collection_add_new' %}"> {% csrf_token %}
