@@ -86,10 +86,10 @@
                                 <form method="POST"
                                       action="{% url 'collection:book_collection_add' pk=book.id %}"> {% csrf_token %}
 
-                                    Data przeczytania: <input type="date" name="date">
+                                    Data przeczytania: <input type="date" name="date" id="input_{{ forloop.counter }}">
                                     <button type="submit" class="btn btn-primary" name="book_add"
-                                            id="submit_button_{{ forloop.counter }}">Dodaj
-                                    </button>
+                                            id="submit_button_{{ forloop.counter }}">Dodaj do Moja Biblioteka
+                                    </button> <div class="text-danger d-none" id="err_msg_{{ forloop.counter }}">Podaj datę</div>
                                 </form>
                             </div>
 
