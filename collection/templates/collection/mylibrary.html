@@ -39,12 +39,17 @@
                 <div class="p-3 d-none" id="new_book_form">
                     <form method="POST" action="{% url 'collection:book_collection_add_new' %}"> {% csrf_token %}
 
-                        Tytuł: <input type="text" name="title" value="{{ book.name }}">
-                        Autor: <input type="text" name="author" value="{{ book.author }}">
+                        Tytuł: <input type="text" name="title" value="{{ book.name }}" id="input-title">
+                        Autor: <input type="text" name="author" value="{{ book.author }}" id="input-author">
+                        Data przeczytania: <input type="date" name="date" id="input-date">
 
-                        Data przeczytania: <input type="date" name="date">
-                        <button type="submit" class="btn btn-primary">Dodaj</button>
+                        <button type="submit" class="btn btn-primary" id="new-book-submit-form">Dodaj</button>
                     </form>
+                </div>
+                <div class="alert alert-danger d-none" id="err-msg">
+                    <p class="d-none" id="err-title">! Dodaj tytuł książki</p>
+                    <p class="d-none" id="err-author">! Dodaj autora książki</p>
+                    <p class="d-none" id="err-date">! Dodaj datę przeczytania książki</p>
                 </div>
             </div>
         </div>

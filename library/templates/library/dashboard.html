@@ -67,26 +67,23 @@
                             {% endif %}
                         {% endfor %}
                         <td>
-                        <td><a href="#" class="btn btn-success" id="add_btn_{{ forloop.counter }}">+</a>
+                        <td><a href="#" class="btn btn-success" id="add-btn-{{ forloop.counter }}">+</a>
                         </td>
 
                         <td><a href="{% url 'library:book_remove' pk=book.id %}" class="btn btn-danger">Usuń</a></td>
                     </tr>
 
-                    <tr class="d-none flex" id="add_comp_{{ forloop.counter }}">
+                    <tr class="d-none flex" id="add-comp-{{ forloop.counter }}">
                         <td colspan="25">
 
                             <div>
                                 <form method="POST"
                                       action="{% url 'collection:book_collection_add' pk=book.id %}"> {% csrf_token %}
 
-                                    Data przeczytania: <input type="date" name="date" id="input_{{ forloop.counter }}">
+                                    Data przeczytania: <input type="date" name="date" id="input-{{ forloop.counter }}">
                                     <button type="submit" class="btn btn-primary m-1" name="book_add"
-                                            id="submit_button_{{ forloop.counter }}">Dodaj do Moja Biblioteka
-                                    </button>
-                                    <div class="alert alert-danger alert-dismissible"
-                                         id="err_msg_{{ forloop.counter }}">! Podaj datę
-                                    </div>
+                                            id="submit-button-{{ forloop.counter }}">Dodaj do Moja Biblioteka
+                                    </button> <div class="alert alert-danger alert-dismissible" id="err-msg-{{ forloop.counter }}">! Podaj datę</div>
                                 </form>
                             </div>
 
