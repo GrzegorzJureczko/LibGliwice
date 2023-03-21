@@ -18,10 +18,10 @@
             <a href="{% url 'users:login' %}" class="btn btn-info">Zaloguj się, aby móc korzystać z aplikacji</a><br>
         {% endif %}
 
-        <br>
+<input type="hidden" id="booksLen" name="booksLen" value="{{ books_len }}">
+    {{ books_len }}
 
-
-        <table class="table table-hover">
+        <table class="table table-hover mt-4">
             <thead>
             <tr>
                 <th scope="col">#</th>
@@ -67,13 +67,13 @@
                             {% endif %}
                         {% endfor %}
                         <td>
-                        <td><a href="#" class="btn btn-success" id="add-btn-{{ forloop.counter }}">+</a>
+                        <td><button class="btn btn-success" id="add-btn-{{ forloop.counter }}">+</button>
                         </td>
 
                         <td><a href="{% url 'library:book_remove' pk=book.id %}" class="btn btn-danger">Usuń</a></td>
                     </tr>
 
-                    <tr class="d-none flex" id="add-comp-{{ forloop.counter }}">
+                    <tr class="d-none flex anim" id="add-comp-{{ forloop.counter }}">
                         <td colspan="25">
 
                             <div>
@@ -89,7 +89,7 @@
 
                         </td>
                     </tr>
-                    <input type="hidden" id="booksLen" name="booksLen" value="{{ books_len }}">
+
 
                 {% empty %}
 
