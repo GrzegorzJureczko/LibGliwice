@@ -6,7 +6,6 @@ import requests
 from bs4 import BeautifulSoup
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 
-
 from library import models
 from collection import models as c_models
 from library.forms import LibraryCreateForm
@@ -89,18 +88,17 @@ class BooksAvailability(View):
         books = models.Books.objects.filter(user=user.id)
         status = models.BooksLibraries.objects.all()
 
-        books_len = len(books) + 1 # passes variable for js purpose. Book add to my library feature
+        books_len = len(books) + 1  # passes variable for js purpose. Book add to my library feature
         return render(request, 'library/dashboard.html',
-                      context={'libraries': libraries, 'status': status, 'books': books, 'books_len':books_len})
+                      context={'libraries': libraries, 'status': status, 'books': books, 'books_len': books_len})
 
     def post(self, request, url=None):
         # saves data of book availability in all libraries. Obtained data must be processed first
         user = request.user
 
-
         # retrieving data from library database about book availability using link provided by user
         try:
-            if not url: # checks if url is set by user or url comes with random urls from demo version
+            if not url:  # checks if url is set by user or url comes with random urls from demo version
                 url = request.POST.get('link')
             response = requests.get(str(url))
             soup = BeautifulSoup(response.text, 'html.parser')
@@ -113,10 +111,11 @@ class BooksAvailability(View):
 
         except:
             return redirect('library:books_availability')
-
         # retrieving book's author, title and number of pages
         if '[' in pages:
             pages = pages[pages.index('">') + 2:pages.index(',')]
+        elif 'stron' in pages:
+            pages = pages[pages.index('">') + 2:pages.index('stron')]
         else:
             pages = pages[pages.index('">') + 2:pages.index('s.') - 1]
         title = title.string
@@ -124,7 +123,6 @@ class BooksAvailability(View):
             auth = author[author.index('/') + 2:author.index(';')]
         else:
             auth = author[author.index('/') + 2:author.index('</')]
-
         # splitting branches and saving data to a list
         books_availability = []
         while len(branch) > 0:
@@ -262,4 +260,3 @@ class Summary(View):
         books = models.Books.objects.filter(user=user.id, libraries=library, bookslibraries__status=1)
         status = models.BooksLibraries.objects.all()
         return render(request, 'library/summary.html', context={'library': library, 'books': books, 'status': status})
-
