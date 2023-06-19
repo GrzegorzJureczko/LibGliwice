@@ -118,6 +118,10 @@ class BooksAvailability(View):
             pages = pages[pages.index('">') + 2:pages.index('stron')]
         else:
             pages = pages[pages.index('">') + 2:pages.index('s.') - 1]
+
+        #leaves only digits
+        pages = ''.join(c for c in pages if c.isdigit())
+
         title = title.string
         if ';' in author:
             auth = author[author.index('/') + 2:author.index(';')]
