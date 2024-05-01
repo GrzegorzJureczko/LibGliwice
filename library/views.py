@@ -102,31 +102,41 @@ class BooksAvailability(View):
                 url = request.POST.get('link')
             response = requests.get(str(url))
             soup = BeautifulSoup(response.text, 'html.parser')
-            branch = soup.find_all('b')
+
+            # retrieving book's branch, location and availability
+            raw_branch_data = soup.find_all('dd')
+            branch = []
+            for line in raw_branch_data:
+                for branch_item in line.find_all('b'):
+                    branch.append(branch_item.string)
+
+            # retrieving book's title
             title = soup.find('h1')
+            title = title.string
+
+            # retrieving author's name
             author_sib = soup.find('dt', text='Tytuł pełny:')
             author = str(author_sib.next_sibling.next_sibling)
+            if ';' in author:
+                auth = author[author.index('/') + 2:author.index(';')]
+            else:
+                auth = author[author.index('/') + 2:author.index('</')]
+
+            # retrieving book's number of pages
             pages_sib = soup.find('dt', text='Opis fizyczny:')
             pages = str(pages_sib.next_sibling.next_sibling)
+            if '[' in pages:
+                pages = pages[pages.index('">') + 2:pages.index(',')]
+            elif 'stron' in pages:
+                pages = pages[pages.index('">') + 2:pages.index('stron')]
+            else:
+                pages = pages[pages.index('">') + 2:pages.index('s.') - 1]
+            # leaves only digits
+            pages = ''.join(c for c in pages if c.isdigit())
 
         except:
             return redirect('library:books_availability')
-        # retrieving book's author, title and number of pages
-        if '[' in pages:
-            pages = pages[pages.index('">') + 2:pages.index(',')]
-        elif 'stron' in pages:
-            pages = pages[pages.index('">') + 2:pages.index('stron')]
-        else:
-            pages = pages[pages.index('">') + 2:pages.index('s.') - 1]
 
-        #leaves only digits
-        pages = ''.join(c for c in pages if c.isdigit())
-
-        title = title.string
-        if ';' in author:
-            auth = author[author.index('/') + 2:author.index(';')]
-        else:
-            auth = author[author.index('/') + 2:author.index('</')]
         # splitting branches and saving data to a list
         books_availability = []
         while len(branch) > 0:
