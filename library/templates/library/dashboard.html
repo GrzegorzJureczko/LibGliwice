@@ -9,10 +9,11 @@
                 <div class="mb-3">
                     <label for="link" class="form-label">Wprowadż link z katalogu <a
                             href="https://integro.biblioteka.gliwice.pl/catalog">INTEGRO</a></label>
-                    <input type="text" class="form-control" name="link" id="link">
+                    <input type="text" class="form-control" name="link" id="link" value="">
                 </div>
 
-                <button type="submit" class="btn btn-primary" name="books_availability">Wprowadź link</button>
+                <button type="submit" class="btn btn-primary" name="books_availability">Zatwierdź link</button>
+                <button type="button" onclick="generateLink()" class="btn btn-warning" id="random">Losuj</button>
             </form>
         {% else %}
             <a href="{% url 'users:login' %}" class="btn btn-info">Zaloguj się, aby móc korzystać z aplikacji</a><br>

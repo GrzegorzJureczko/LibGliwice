@@ -1,3 +1,22 @@
+function generateLink() {
+    var links = ["https://integro.biblioteka.gliwice.pl/692300247875/king-stephen/stephen-king-na-wielkim-ekranie?bibFilter=69",
+                 "https://integro.biblioteka.gliwice.pl/692800373413/atwood-margaret/opowiesc-podrecznej?bibFilter=69",
+                 "https://integro.biblioteka.gliwice.pl/692900393764/ng-celeste/male-ogniska?bibFilter=69",
+                 "https://integro.biblioteka.gliwice.pl/692900391565/kwan-kevin/bajecznie-bogaci-azjaci?bibFilter=69",
+                 "https://integro.biblioteka.gliwice.pl/692300294163/lee-harper/zabic-drozda?bibFilter=69",
+                 "https://integro.biblioteka.gliwice.pl/692500337134/lynch-scott/klamstwa-lockea-lamory?bibFilter=69",
+                 "https://integro.biblioteka.gliwice.pl/693300470131/gabaldon-diana/powiedz-pszczolom-ze-odszedlem?bibFilter=69",
+                 "https://integro.biblioteka.gliwice.pl/692300248008/garcia-marquez-gabriel/sto-lat-samotnosci?bibFilter=69",
+                 "https://integro.biblioteka.gliwice.pl/692300280100/fitzgerald-francis-scott/wielki-gatsby?bibFilter=69",
+                 "https://integro.biblioteka.gliwice.pl/692300193539/woolf-virginia/pani-dalloway?bibFilter=69",
+                 "https://integro.biblioteka.gliwice.pl/692300273659/kerouac-jack/w-drodze?bibFilter=69",
+                 "https://integro.biblioteka.gliwice.pl/692500334870/christie-agatha/morderstwo-w-orient-expressie?bibFilter=69",
+    ]
+    var randomIndex = Math.floor(Math.random() * links.length);
+    document.getElementById("link").value = links[randomIndex]
+}
+
+
 window.addEventListener("load", function () {
     if (window.location.pathname === '/dashboard/') {
 
@@ -38,20 +57,7 @@ window.addEventListener("load", function () {
                     e.preventDefault()
                 }
             })
-
-
-            // let bookSegment = document.getElementById(`book_segment_${comp}`)
-            // let submitButton = document.getElementById(`submit_button_${comp}`)
-            // let addInfo = document.getElementById(`add-info_${comp}`)
-            //
-            // submitButton.addEventListener('click', () => {
-            //     bookSegment.classList.add('d-none')
-            //     bookAddComp.classList.toggle('d-none')
-            //     addInfo.classList.toggle('d-none')
-            // })
         }
-
-
     }
 
 
@@ -107,10 +113,6 @@ window.addEventListener("load", function () {
                 }
                 e.preventDefault()
             }
-
-
         })
-
-
     }
 })
