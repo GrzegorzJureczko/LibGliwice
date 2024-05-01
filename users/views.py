@@ -1,10 +1,9 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView
 from django.contrib.auth import authenticate, login
-from users import models
 
 
 class SignUpView(CreateView):
@@ -26,4 +25,4 @@ class AutoLogin(View):
         if user is not None:
             # Log in the user
             login(request, user)
-        return render(request, 'library/dashboard.html')
+        return redirect('library:books_availability')
