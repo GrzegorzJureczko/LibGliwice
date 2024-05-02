@@ -11,6 +11,13 @@ function generateLink() {
                  "https://integro.biblioteka.gliwice.pl/692300193539/woolf-virginia/pani-dalloway?bibFilter=69",
                  "https://integro.biblioteka.gliwice.pl/692300273659/kerouac-jack/w-drodze?bibFilter=69",
                  "https://integro.biblioteka.gliwice.pl/692500334870/christie-agatha/morderstwo-w-orient-expressie?bibFilter=69",
+                 "https://integro.biblioteka.gliwice.pl/692300167642/steinbeck-john/na-wschod-od-edenu?bibFilter=69",
+                 "https://integro.biblioteka.gliwice.pl/693300466230/kawaguchi-toshikazu/zanim-wystygnie-kawa?bibFilter=69",
+                 "https://integro.biblioteka.gliwice.pl/693100413716/setterfield-diane/byla-sobie-rzeka?bibFilter=69",
+                 "https://integro.biblioteka.gliwice.pl/692300272197/baczynski-krzysztof-kamil/utwory-wybrane?bibFilter=69",
+                 "https://integro.biblioteka.gliwice.pl/693200445931/nugent-liz/pod-skora?bibFilter=69",
+                 "https://integro.biblioteka.gliwice.pl/692600349861/bonda-katarzyna/sprawa-niny-frank?bibFilter=69",
+                 "https://integro.biblioteka.gliwice.pl/693400475749/bonda-katarzyna/do-cna?bibFilter=69",
     ]
     var randomIndex = Math.floor(Math.random() * links.length);
     document.getElementById("link").value = links[randomIndex]
