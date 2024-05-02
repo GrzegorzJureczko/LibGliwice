@@ -16,9 +16,12 @@ function generateLink() {
     document.getElementById("link").value = links[randomIndex]
 }
 
+function showLoadingSpin(){
+    document.getElementById("loadDashIndicator").classList.remove("d-none")
+}
+
 
 function loadIndicator(){
-    load = 0
     document.getElementById("loadIndicator").classList.remove("d-none")
     var loadValue = document.getElementById("loadValue")
 
