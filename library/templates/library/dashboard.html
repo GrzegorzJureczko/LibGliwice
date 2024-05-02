@@ -1,126 +1,131 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% load library_extras %}
+{% load library_extras %}
 
-    <div class="p-3">
+<div class="p-3">
+    {% if user.is_authenticated %}
+    <form method="post"> {% csrf_token %}
+        <div class="mb-3">
+            <label for="link" class="form-label">Wprowadż link z katalogu <a
+                    href="https://integro.biblioteka.gliwice.pl/catalog">INTEGRO</a></label>
+            <input type="text" class="form-control" name="link" id="link" value="">
+        </div>
+
+        <button type="submit" onclick="showLoadingSpin()" class="btn btn-primary" name="books_availability">Zatwierdź link <span
+                class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true" id="loadDashIndicator"></span></button>
+        <button type="button" onclick="generateLink()" class="btn btn-warning" id="random">Losuj</button>
+    </form>
+    {% else %}
+    <a href="{% url 'users:login' %}" class="btn btn-info">Zaloguj się, aby móc korzystać z aplikacji</a><br>
+    {% endif %}
+
+    <input type="hidden" id="booksLen" name="booksLen" value="{{ books_len }}">
+
+
+    <table class="table table-hover mt-4">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Tytuł</th>
+            <th scope="col">Autor</th>
+            {% for library in libraries %}
+            <th scope="col"><a href="{% url 'library:summary' pk=library.id %}"
+                               class="text-black">{{ library.short_name }}</a></th>
+            {% endfor %}
+
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
         {% if user.is_authenticated %}
-            <form method="post"> {% csrf_token %}
-                <div class="mb-3">
-                    <label for="link" class="form-label">Wprowadż link z katalogu <a
-                            href="https://integro.biblioteka.gliwice.pl/catalog">INTEGRO</a></label>
-                    <input type="text" class="form-control" name="link" id="link" value="">
+        {% for book in books %}
+        <tr id="book_segment_{{ forloop.counter }}">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ book.name }}</td>
+            <td>{{ book.author }}</td>
+            {% for item in status|in_books:book %}
+            {% if item.status == 1 %}
+            <td>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     class="bi bi-check-square-fill" viewBox="0 0 16 16">
+                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z"/>
+                </svg>
+            </td>
+            {% elif item.status == 2 %}
+            <td>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     class="bi bi-app" viewBox="0 0 16 16">
+                    <path d="M11 2a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3h6zM5 1a4 4 0 0 0-4 4v6a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4V5a4 4 0 0 0-4-4H5z"/>
+                </svg>
+            </td>
+            {% elif item.status == 3 %}
+            <td>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     class="bi bi-x" viewBox="0 0 16 16">
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+            </td>
+            {% endif %}
+            {% endfor %}
+            <td>
+            <td>
+                <button class="btn btn-success" id="add-btn-{{ forloop.counter }}">+</button>
+            </td>
+
+            <td><a href="{% url 'library:book_remove' pk=book.id %}" class="btn btn-danger">Usuń</a></td>
+        </tr>
+
+        <tr class="d-none flex anim" id="add-comp-{{ forloop.counter }}">
+            <td colspan="25">
+
+                <div>
+                    <form method="POST"
+                          action="{% url 'collection:book_collection_add' pk=book.id %}"> {% csrf_token %}
+
+                        Data przeczytania: <input type="date" name="date" id="input-{{ forloop.counter }}">
+                        <button type="submit" class="btn btn-primary m-1" name="book_add"
+                                id="submit-button-{{ forloop.counter }}">Dodaj do Moja Biblioteka
+                        </button>
+                        <div class="alert alert-danger alert-dismissible" id="err-msg-{{ forloop.counter }}">! Podaj
+                            datę
+                        </div>
+                    </form>
                 </div>
 
-                <button type="submit" class="btn btn-primary" name="books_availability">Zatwierdź link</button>
-                <button type="button" onclick="generateLink()" class="btn btn-warning" id="random">Losuj</button>
-            </form>
-        {% else %}
-            <a href="{% url 'users:login' %}" class="btn btn-info">Zaloguj się, aby móc korzystać z aplikacji</a><br>
+            </td>
+        </tr>
+
+
+        {% empty %}
+
+        <a class="text-bg-danger" href="{% url 'home:instruction' %}">Lista jest pusta, przeczytaj
+            instrukcję</a>
+
+        {% endfor %}
         {% endif %}
+        </tbody>
+    </table>
 
-<input type="hidden" id="booksLen" name="booksLen" value="{{ books_len }}">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+         class="bi bi-check-square-fill"
+         viewBox="0 0 16 16">
+        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z"/>
+    </svg>
+    dostępna
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-app"
+         viewBox="0 0 16 16">
+        <path d="M11 2a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3h6zM5 1a4 4 0 0 0-4 4v6a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4V5a4 4 0 0 0-4-4H5z"/>
+    </svg>
+    wypożyczona
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x"
+         viewBox="0 0 16 16">
+        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+    </svg>
+    niedostępna
 
-
-        <table class="table table-hover mt-4">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Tytuł</th>
-                <th scope="col">Autor</th>
-                {% for library in libraries %}
-                    <th scope="col"><a href="{% url 'library:summary' pk=library.id %}"
-                                       class="text-black">{{ library.short_name }}</a></th>
-                {% endfor %}
-
-                <th scope="col"></th>
-            </tr>
-            </thead>
-            <tbody>
-            {% if user.is_authenticated %}
-                {% for book in books %}
-                    <tr id="book_segment_{{ forloop.counter }}">
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ book.name }}</td>
-                        <td>{{ book.author }}</td>
-                        {% for item in status|in_books:book %}
-                            {% if item.status == 1 %}
-                                <td>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                         class="bi bi-check-square-fill" viewBox="0 0 16 16">
-                                        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z"/>
-                                    </svg>
-                                </td>
-                            {% elif item.status == 2 %}
-                                <td>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                         class="bi bi-app" viewBox="0 0 16 16">
-                                        <path d="M11 2a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3h6zM5 1a4 4 0 0 0-4 4v6a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4V5a4 4 0 0 0-4-4H5z"/>
-                                    </svg>
-                                </td>
-                            {% elif item.status == 3 %}
-                                <td>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                         class="bi bi-x" viewBox="0 0 16 16">
-                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                    </svg>
-                                </td>
-                            {% endif %}
-                        {% endfor %}
-                        <td>
-                        <td><button class="btn btn-success" id="add-btn-{{ forloop.counter }}">+</button>
-                        </td>
-
-                        <td><a href="{% url 'library:book_remove' pk=book.id %}" class="btn btn-danger">Usuń</a></td>
-                    </tr>
-
-                    <tr class="d-none flex anim" id="add-comp-{{ forloop.counter }}">
-                        <td colspan="25">
-
-                            <div>
-                                <form method="POST"
-                                      action="{% url 'collection:book_collection_add' pk=book.id %}"> {% csrf_token %}
-
-                                    Data przeczytania: <input type="date" name="date" id="input-{{ forloop.counter }}">
-                                    <button type="submit" class="btn btn-primary m-1" name="book_add"
-                                            id="submit-button-{{ forloop.counter }}">Dodaj do Moja Biblioteka
-                                    </button> <div class="alert alert-danger alert-dismissible" id="err-msg-{{ forloop.counter }}">! Podaj datę</div>
-                                </form>
-                            </div>
-
-                        </td>
-                    </tr>
-
-
-                {% empty %}
-
-                    <a class="text-bg-danger" href="{% url 'home:instruction' %}">Lista jest pusta, przeczytaj
-                        instrukcję</a>
-
-                {% endfor %}
-            {% endif %}
-            </tbody>
-        </table>
-
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-             class="bi bi-check-square-fill"
-             viewBox="0 0 16 16">
-            <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z"/>
-        </svg>
-        dostępna
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-app"
-             viewBox="0 0 16 16">
-            <path d="M11 2a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3h6zM5 1a4 4 0 0 0-4 4v6a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4V5a4 4 0 0 0-4-4H5z"/>
-        </svg>
-        wypożyczona
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x"
-             viewBox="0 0 16 16">
-            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-        </svg>
-        niedostępna
-
-        <a href="{% url 'library:book_remove_all' %}" class="btn btn-danger float-end">Wyczyść wszystko</a>
-    </div>
+    <a href="{% url 'library:book_remove_all' %}" class="btn btn-danger float-end">Wyczyść wszystko</a>
+</div>
 
 {% endblock %}
 
