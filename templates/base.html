@@ -58,7 +58,7 @@
                 </li>
                 {% if not user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link active btn btn-warning"  aria-current="page" href="{% url 'users:auto_sign' %}">Demo</a>
+                    <a class="nav-link active btn btn-warning" aria-current="page" href="{% url 'users:auto_sign' %}">Demo</a>
                 </li>
                 {% endif %}
                 {% endif %}
@@ -79,19 +79,34 @@
     <div class="row">
         <div class="col">
             <div class="alert alert-warning" role="alert">
-                Poruszasz się w wersji demo. Możesz dowolnie używać dostępnych opcji. W razie potrzeby w każdej
-                chwili możesz wygenerować nowe dane, klikając przycisk
-                <a href="{% url 'demo:demo' %}" class="btn btn-warning ">Generuj</a>
-            </div>
-            <div class="m-1">
-
-                <a href="{% url 'home:instruction' %}" class="btn btn-outline-primary btn-lg">Zapoznaj się z
-                    instrukcją</a>
+                Poruszasz się w wersji demo. Możesz dowolnie używać dostępnych opcji. W razie potrzeby możesz wygenerować nowe dane, klikając przycisk
+                <a href="{% url 'demo:demo' %}" class="btn btn-warning" onclick="loadIndicator()">Generuj</a>
+                <button class="btn btn-primary d-none" type="button" id="loadIndicator" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                     <a id="loadValue"></a>
+                </button>
             </div>
         </div>
     </div>
+    <div class="row m-1">
+
+        <a href="{% url 'home:instruction' %}" class="btn btn-outline-primary btn-lg">Zapoznaj się z
+            instrukcją</a>
+    </div>
 </div>
 {% endif %}
+<script>
+        // Make an AJAX request to get the count of generated URLs
+        fetch('/url-count/')
+            .then(response => response.json())
+            .then(data => {
+                // Display the count on the webpage
+                document.getElementById('progress').innerText = `Total URLs Geneasrasgrated: ${data.urls_generated}`;
+            })
+            .catch(error => console.error('Error:', error));
 
+
+
+</script>
 </body>
 </html>

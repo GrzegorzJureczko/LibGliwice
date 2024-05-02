@@ -17,6 +17,21 @@ function generateLink() {
 }
 
 
+
+function loadIndicator(){
+    load = 0
+    document.getElementById("loadIndicator").classList.remove("d-none")
+    setInterval(function(){
+    document.getElementById("loadValue").innerText = load + "%"
+    if(load<80){
+        load += 20
+    }
+    },2000)
+
+}
+
+
+
 window.addEventListener("load", function () {
     if (window.location.pathname === '/dashboard/') {
 
