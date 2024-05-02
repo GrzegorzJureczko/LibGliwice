@@ -14,7 +14,9 @@
 
         <button type="submit" onclick="showLoadingSpin()" class="btn btn-primary" name="books_availability">Zatwierdź link <span
                 class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true" id="loadDashIndicator"></span></button>
+        {% if user.get_username == 'demo' %}
         <button type="button" onclick="generateLink()" class="btn btn-warning" id="random">Losuj</button>
+        {% endif %}
     </form>
     {% else %}
     <a href="{% url 'users:login' %}" class="btn btn-info">Zaloguj się, aby móc korzystać z aplikacji</a><br>
