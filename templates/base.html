@@ -9,12 +9,13 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>LibGliwice {% block title %}{% endblock %}</title>
-    <link rel="icon" type="image/x-icon" href={% static
-    './images/favicon/favicon.png' %}>
+    <link rel="icon" type="image/x-icon" href="{% static './images/favicon/favicon.png' %}">
     <link rel="stylesheet" href="{% static './css/bootstrap.min.css' %}">
     <!-- link do staticów. ścieżka idzie od folderu static-->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="{% static './js/bootstrap.min.js' %}" async defer></script>
     <script src="{% static './js/main.js' %}" async defer></script>
+
     <!-- asynchronicznie dociąga i parsuje js. HTML generuje sie wcześniej -->
 </head>
 <body>
@@ -95,18 +96,6 @@
     </div>
 </div>
 {% endif %}
-<script>
-        // Make an AJAX request to get the count of generated URLs
-        fetch('/url-count/')
-            .then(response => response.json())
-            .then(data => {
-                // Display the count on the webpage
-                document.getElementById('progress').innerText = `Total URLs Geneasrasgrated: ${data.urls_generated}`;
-            })
-            .catch(error => console.error('Error:', error));
 
-
-
-</script>
 </body>
 </html>

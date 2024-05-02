@@ -17,17 +17,21 @@ function generateLink() {
 }
 
 
-
 function loadIndicator(){
     load = 0
     document.getElementById("loadIndicator").classList.remove("d-none")
-    setInterval(function(){
-    document.getElementById("loadValue").innerText = load + "%"
-    if(load<80){
-        load += 20
-    }
-    },2000)
+    var loadValue = document.getElementById("loadValue")
 
+    setInterval(function(){
+      $.ajax({
+        type: 'GET',
+        url: `url-count/`,
+        success: function (response) {
+            console.log(response.context)
+            loadValue.innerText = response.context + "/5"
+        }
+            })
+    },1000)
 }
 
 
