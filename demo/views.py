@@ -38,8 +38,10 @@ class DemoVersion(View):
             'https://integro.biblioteka.gliwice.pl/692300237958/roberts-gregory-david/shantaram?bibFilter=69',
             'https://integro.biblioteka.gliwice.pl/692300181878/wiggs-susan/obudzic-szczescie?bibFilter=69',
             'https://integro.biblioteka.gliwice.pl/692300295849/tennant-emma/zakochana-emma?bibFilter=69',
-            'https://integro.biblioteka.gliwice.pl/692300074599/tennant-emma/dziwne-losy-adelki?bibFilter=69'
-
+            'https://integro.biblioteka.gliwice.pl/692300074599/tennant-emma/dziwne-losy-adelki?bibFilter=69',
+            'https://integro.biblioteka.gliwice.pl/692700357102/yanagihara-hanya/male-zycie?bibFilter=69',
+            'https://integro.biblioteka.gliwice.pl/692900383434/fraczyk-izabella/za-stare-grzechy?bibFilter=69',
+            'https://integro.biblioteka.gliwice.pl/693400489646/gren-hanna/piec-i-pol-smierci?bibFilter=69',
         ]
         random.shuffle(urls)
 
