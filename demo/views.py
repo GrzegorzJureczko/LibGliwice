@@ -8,6 +8,16 @@ from collection import views as c_views
 
 from library import models as l_models
 from collection import models as c_models
+from django.http import JsonResponse
+
+
+class UrlCountView(View):
+    # progress counter for generating new data
+    def get(self, request):
+        user = request.user
+        books = l_models.Books.objects.filter(user=user.id)
+        count = books.count()
+        return JsonResponse({'context': count}, safe=False)
 
 
 class DemoVersion(View):
@@ -30,18 +40,18 @@ class DemoVersion(View):
             'https://integro.biblioteka.gliwice.pl/692300295849/tennant-emma/zakochana-emma?bibFilter=69',
             'https://integro.biblioteka.gliwice.pl/692300074599/tennant-emma/dziwne-losy-adelki?bibFilter=69'
 
-
         ]
         random.shuffle(urls)
 
+        count = 0
         for url in urls[:5]:
+            # UrlCountView().get(request, count)
             l_views.BooksAvailability().post(request, url)
 
         user = request.user
         books = l_models.Books.objects.filter(readbooks__users=user)
         for book in books:
             c_models.ReadBooks.objects.get(users=user, book=book).delete()
-
 
         random_books = [
             {'title': 'Duma i uprzedzenie', 'author': 'Jane Austen', 'date': '2023-02-09'},

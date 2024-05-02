@@ -17,6 +17,25 @@ function generateLink() {
 }
 
 
+function loadIndicator(){
+    load = 0
+    document.getElementById("loadIndicator").classList.remove("d-none")
+    var loadValue = document.getElementById("loadValue")
+
+    setInterval(function(){
+      $.ajax({
+        type: 'GET',
+        url: `url-count/`,
+        success: function (response) {
+            console.log(response.context)
+            loadValue.innerText = response.context + "/5"
+        }
+            })
+    },1000)
+}
+
+
+
 window.addEventListener("load", function () {
     if (window.location.pathname === '/dashboard/') {
 
