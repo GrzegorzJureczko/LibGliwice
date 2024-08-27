@@ -23,7 +23,7 @@ $ git clone https://github.com/GrzegorzJureczko/LibGliwice.git
 $ python -m venv venv
 $ source venv/bin/activate
 ```
-* Install the dependencies:
+* Install dependencies:
 ```
 (env)$ pip install -r requirements.txt
 ```
