@@ -112,11 +112,13 @@ class BooksAvailability(View):
 
         # retrieving book's branch, location and availability
         raw_branch_data = soup.find_all('dd')
-
         branch = []
         for line in raw_branch_data:
+
+
             for branch_item in line.find_all('b'):
-                branch.append(branch_item.string)
+                if branch_item.string != None:
+                    branch.append(branch_item.string)
 
         # retrieving book's title
         title = soup.find('h1')
@@ -141,8 +143,6 @@ class BooksAvailability(View):
             pages = pages[pages.index('">') + 2:pages.index('s.') - 1]
         # leaves only digits
         pages = ''.join(c for c in pages if c.isdigit())
-
-
 
         # splitting branches and saving data to a list
         books_availability = []
