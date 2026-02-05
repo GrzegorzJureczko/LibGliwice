@@ -97,45 +97,52 @@ class BooksAvailability(View):
         user = request.user
 
         # retrieving data from library database about book availability using link provided by user
-        try:
-            if not url:  # checks if url is set by user or url comes with random urls from demo version
-                url = request.POST.get('link')
-            response = requests.get(str(url))
-            soup = BeautifulSoup(response.text, 'html.parser')
 
-            # retrieving book's branch, location and availability
-            raw_branch_data = soup.find_all('dd')
-            branch = []
-            for line in raw_branch_data:
-                for branch_item in line.find_all('b'):
-                    branch.append(branch_item.string)
+        if not url:  # checks if url is set by user or url comes with random urls from demo version
+            url = request.POST.get('link')
 
-            # retrieving book's title
-            title = soup.find('h1')
-            title = title.string
+        headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                  "AppleWebKit/537.36 (KHTML, like Gecko) "
+                  "Chrome/120.0 Safari/537.36"
+        }
 
-            # retrieving author's name
-            author_sib = soup.find('dt', text='Tytuł pełny:')
-            author = str(author_sib.next_sibling.next_sibling)
-            if ';' in author:
-                auth = author[author.index('/') + 2:author.index(';')]
-            else:
-                auth = author[author.index('/') + 2:author.index('</')]
+        response = requests.get(str(url), headers=headers)
+        soup = BeautifulSoup(response.text, 'html.parser')
 
-            # retrieving book's number of pages
-            pages_sib = soup.find('dt', text='Opis fizyczny:')
-            pages = str(pages_sib.next_sibling.next_sibling)
-            if '[' in pages:
-                pages = pages[pages.index('">') + 2:pages.index(',')]
-            elif 'stron' in pages:
-                pages = pages[pages.index('">') + 2:pages.index('stron')]
-            else:
-                pages = pages[pages.index('">') + 2:pages.index('s.') - 1]
-            # leaves only digits
-            pages = ''.join(c for c in pages if c.isdigit())
+        # retrieving book's branch, location and availability
+        raw_branch_data = soup.find_all('dd')
 
-        except:
-            return redirect('library:books_availability')
+        branch = []
+        for line in raw_branch_data:
+            for branch_item in line.find_all('b'):
+                branch.append(branch_item.string)
+
+        # retrieving book's title
+        title = soup.find('h1')
+        title = title.string
+
+        # retrieving author's name
+        author_sib = soup.find('dt', text='Tytuł pełny:')
+        author = str(author_sib.next_sibling.next_sibling)
+        if ';' in author:
+            auth = author[author.index('/') + 2:author.index(';')]
+        else:
+            auth = author[author.index('/') + 2:author.index('</')]
+
+        # retrieving book's number of pages
+        pages_sib = soup.find('dt', text='Opis fizyczny:')
+        pages = str(pages_sib.next_sibling.next_sibling)
+        if '[' in pages:
+            pages = pages[pages.index('">') + 2:pages.index(',')]
+        elif 'stron' in pages:
+            pages = pages[pages.index('">') + 2:pages.index('stron')]
+        else:
+            pages = pages[pages.index('">') + 2:pages.index('s.') - 1]
+        # leaves only digits
+        pages = ''.join(c for c in pages if c.isdigit())
+
+
 
         # splitting branches and saving data to a list
         books_availability = []
