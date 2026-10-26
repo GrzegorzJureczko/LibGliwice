@@ -1,3 +1,5 @@
+<p align="center"><img src="static/images/logo/logo.svg" alt="LibGliwice" width="420"></p>
+
 # LibGliwice
 ### https://libgliwice.pythonanywhere.com/
 
