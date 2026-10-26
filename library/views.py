@@ -1,4 +1,7 @@
+import logging
+
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
@@ -9,6 +12,8 @@ from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 from library import models
 from collection import models as c_models
 from library.forms import LibraryCreateForm
+
+logger = logging.getLogger(__name__)
 
 
 # Create your views here.
@@ -107,8 +112,43 @@ class BooksAvailability(View):
                   "Chrome/120.0 Safari/537.36"
         }
 
-        response = requests.get(str(url), headers=headers)
+        try:
+            response = requests.get(str(url), headers=headers, timeout=15)
+            response.raise_for_status()
+        except requests.RequestException as error:
+            error_response = getattr(error, 'response', None)
+            logger.error(
+                'Catalog request failed: url=%s error=%r status=%s server=%s cf-ray=%s',
+                url, error,
+                getattr(error_response, 'status_code', None),
+                error_response.headers.get('server') if error_response is not None else None,
+                error_response.headers.get('cf-ray') if error_response is not None else None,
+            )
+            messages.error(
+                request,
+                'Nie udało się pobrać danych z katalogu. Katalog może chwilowo blokować '
+                'automatyczne zapytania. Spróbuj ponownie później.',
+            )
+            return redirect('library:books_availability')
+
         soup = BeautifulSoup(response.text, 'html.parser')
+
+        title = soup.find('h1')
+        author_sib = soup.find('dt', string='Tytuł pełny:')
+        pages_sib = soup.find('dt', string='Opis fizyczny:')
+        if title is None or author_sib is None or pages_sib is None:
+            page_title = soup.find('title')
+            logger.error(
+                'Catalog page has no book data: url=%s page_title=%r h1=%s full_title=%s physical_description=%s',
+                url, page_title.get_text(strip=True) if page_title else None,
+                title is not None, author_sib is not None, pages_sib is not None,
+            )
+            messages.error(
+                request,
+                'Strona katalogu nie zawiera danych książki. Może to być strona '
+                'weryfikacji zabezpieczeń albo zmieniony format katalogu.',
+            )
+            return redirect('library:books_availability')
 
         # retrieving book's branch, location and availability
         raw_branch_data = soup.find_all('dd')
@@ -121,26 +161,22 @@ class BooksAvailability(View):
                     branch.append(branch_item.string)
 
         # retrieving book's title
-        title = soup.find('h1')
-        title = title.string
+        title = title.get_text(strip=True)
 
         # retrieving author's name
-        author_sib = soup.find('dt', text='Tytuł pełny:')
-        author = str(author_sib.next_sibling.next_sibling)
-        if ';' in author:
-            auth = author[author.index('/') + 2:author.index(';')]
-        else:
-            auth = author[author.index('/') + 2:author.index('</')]
+        full_title = author_sib.find_next_sibling('dd')
+        if full_title is None:
+            messages.error(request, 'Nie udało się odczytać opisu książki z katalogu.')
+            return redirect('library:books_availability')
+        author_text = full_title.get_text(' ', strip=True)
+        auth = author_text.split('/', 1)[-1].split(';', 1)[0].strip()
 
         # retrieving book's number of pages
-        pages_sib = soup.find('dt', text='Opis fizyczny:')
-        pages = str(pages_sib.next_sibling.next_sibling)
-        if '[' in pages:
-            pages = pages[pages.index('">') + 2:pages.index(',')]
-        elif 'stron' in pages:
-            pages = pages[pages.index('">') + 2:pages.index('stron')]
-        else:
-            pages = pages[pages.index('">') + 2:pages.index('s.') - 1]
+        physical_description = pages_sib.find_next_sibling('dd')
+        if physical_description is None:
+            messages.error(request, 'Nie udało się odczytać opisu fizycznego książki z katalogu.')
+            return redirect('library:books_availability')
+        pages = physical_description.get_text(' ', strip=True).split(',', 1)[0]
         # leaves only digits
         pages = ''.join(c for c in pages if c.isdigit())
 

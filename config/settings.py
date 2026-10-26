@@ -154,6 +154,20 @@ STATICFILES_FINDERS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {'format': '{asctime} {levelname} {name}: {message}', 'style': '{'},
+    },
+    'handlers': {
+        'console': {'class': 'logging.StreamHandler', 'formatter': 'verbose'},
+    },
+    'loggers': {
+        'library': {'handlers': ['console'], 'level': 'INFO', 'propagate': False},
+    },
+}
+
 LOGIN_REDIRECT_URL = 'library:books_availability'
 LOGOUT_REDIRECT_URL = 'home:home'
 

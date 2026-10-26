@@ -4,6 +4,9 @@
 {% load library_extras %}
 
 <div class="p-3">
+    {% for message in messages %}
+    <div class="alert alert-danger" role="alert">{{ message }}</div>
+    {% endfor %}
     {% if user.is_authenticated %}
     <form method="post"> {% csrf_token %}
         <div class="mb-3">
