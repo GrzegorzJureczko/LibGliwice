@@ -187,6 +187,11 @@ class BooksAvailability(View):
             for i in range(3):
                 branch.pop(0)
 
+        return self.save_availability(user, title, auth, pages, books_availability)
+
+    def save_availability(self, user, title, auth, pages, books_availability):
+        # saves book and its availability (list of tuples: library short name, location, status) for the user
+
         # retrieving list of libraries by short name
         short_libraries_names_list = [item.short_name for item in models.Libraries.objects.all()]
 
