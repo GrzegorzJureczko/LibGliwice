@@ -240,7 +240,8 @@ class BooksAvailability(View):
 
                     add_book = models.Books.objects.get(name=title)
                     library = models.Libraries.objects.get(short_name=library_short_name)
-                    book_libraries_relation = models.BooksLibraries.objects.get(library=library, book=add_book)
+                    book_libraries_relation, _ = models.BooksLibraries.objects.get_or_create(
+                        library=library, book=add_book, defaults={'status': 3, 'location': 'n/a'})
 
                     if book_libraries_relation.status == 3:
                         book_libraries_relation.status = book_status
@@ -266,7 +267,8 @@ class BooksAvailability(View):
 
                     add_book = models.Books.objects.get(name=title)
                     library = models.Libraries.objects.get(short_name=library_short_name)
-                    book_libraries_relation = models.BooksLibraries.objects.get(library=library, book=add_book)
+                    book_libraries_relation, _ = models.BooksLibraries.objects.get_or_create(
+                        library=library, book=add_book, defaults={'status': 3, 'location': 'n/a'})
                     book_libraries_relation.status = book_status
                     book_libraries_relation.location = book_location
                     book_libraries_relation.save()
