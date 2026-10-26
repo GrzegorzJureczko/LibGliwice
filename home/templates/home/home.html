@@ -7,9 +7,6 @@
             <p><img style="display: block; margin-left: auto; margin-right: auto; max-width: 100%; width: 420px;"
                     src="{% static 'images/logo/logo.svg' %}" alt="LibGliwice"/></p>
         </div>
-        <div  class="m-5">
-            <h2>Witaj na stronie LibGliwice!</h2>
-        </div>
          {% if not user.is_authenticated %}
         <div class="m-5">
             <a href="{% url 'users:login' %}" class="btn btn-outline-primary btn-lg">Zaloguj się</a>
