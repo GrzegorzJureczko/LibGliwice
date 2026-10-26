@@ -5,6 +5,8 @@
 ###### password: TestPass123
 or log in automatically by pressing demo button
 
+The demo account works on bundled sample data (books and their availability are generated locally, not fetched from the library's catalog).
+
 With this app, in just few steps, you can find where your books are available in Gliwice's library branches. It allows you to plan your visit so you will find all your books in one branch. No need to waste your time by collecting them one by one. 
 
 ## Features

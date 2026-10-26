@@ -6,6 +6,7 @@ from django.views import View
 from library import views as l_views
 from collection import views as c_views
 
+from demo.sample_books import SAMPLE_BOOKS, random_availability
 from library import models as l_models
 from collection import models as c_models
 from django.http import JsonResponse
@@ -24,31 +25,12 @@ class DemoVersion(View):
     # clears all data and populate with new for demo purpose
     def get(self, request):
         l_views.BookRemoveAll().get(request)
-        urls = [
-            'https://integro.biblioteka.gliwice.pl/692300192868/twain-mark/pamietniki-adama-i-ewy?bibFilter=69',
-            'https://integro.biblioteka.gliwice.pl/692700361185/zajdel-janusz-andrzej/limes-inferior?bibFilter=69',
-            'https://integro.biblioteka.gliwice.pl/692300149008/grochulska-barbara/male-panstwo-wielkich-nadziei?bibFilter=69',
-            'https://integro.biblioteka.gliwice.pl/692300305243/niffenegger-audrey/zona-podroznika-w-czasie?bibFilter=69',
-            'https://integro.biblioteka.gliwice.pl/692300021899/adams-douglas/autostopem-przez-galaktyke?bibFilter=69',
-            'https://integro.biblioteka.gliwice.pl/692300303408/welborn-amy/zrozumiec-kod-da-vinci?bibFilter=69',
-            'https://integro.biblioteka.gliwice.pl/692300248008/garcia-marquez-gabriel/sto-lat-samotnosci?bibFilter=69',
-            'https://integro.biblioteka.gliwice.pl/692600349859/hardy-thomas/z-dala-od-zgielku?bibFilter=69',
-            'https://integro.biblioteka.gliwice.pl/692300037295/pille-lolita/bubble-gum?bibFilter=69',
-            'https://integro.biblioteka.gliwice.pl/692600349576/tartt-donna/tajemna-historia?bibFilter=69',
-            'https://integro.biblioteka.gliwice.pl/692300237958/roberts-gregory-david/shantaram?bibFilter=69',
-            'https://integro.biblioteka.gliwice.pl/692300181878/wiggs-susan/obudzic-szczescie?bibFilter=69',
-            'https://integro.biblioteka.gliwice.pl/692300295849/tennant-emma/zakochana-emma?bibFilter=69',
-            'https://integro.biblioteka.gliwice.pl/692300074599/tennant-emma/dziwne-losy-adelki?bibFilter=69',
-            'https://integro.biblioteka.gliwice.pl/692700357102/yanagihara-hanya/male-zycie?bibFilter=69',
-            'https://integro.biblioteka.gliwice.pl/692900383434/fraczyk-izabella/za-stare-grzechy?bibFilter=69',
-            'https://integro.biblioteka.gliwice.pl/693400489646/gren-hanna/piec-i-pol-smierci?bibFilter=69',
-        ]
-        random.shuffle(urls)
+        sample_books = SAMPLE_BOOKS[:]
+        random.shuffle(sample_books)
 
-        count = 0
-        for url in urls[:5]:
-            # UrlCountView().get(request, count)
-            l_views.BooksAvailability().post(request, url)
+        for title, author, pages in sample_books[:5]:
+            l_views.BooksAvailability().save_availability(
+                request.user, title, author, pages, random_availability())
 
         user = request.user
         books = l_models.Books.objects.filter(readbooks__users=user)

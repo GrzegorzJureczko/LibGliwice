@@ -1,4 +1,5 @@
 import logging
+import random
 
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.contrib import messages
@@ -11,6 +12,7 @@ from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 
 from library import models
 from collection import models as c_models
+from demo.sample_books import SAMPLE_BOOKS, random_availability
 from library.forms import LibraryCreateForm
 
 logger = logging.getLogger(__name__)
@@ -101,7 +103,13 @@ class BooksAvailability(View):
         # saves data of book availability in all libraries. Obtained data must be processed first
         user = request.user
 
-        # retrieving data from library database about book availability using link provided by user
+        if user.get_username() == 'demo':
+            # demo account uses bundled sample data instead of the live catalog
+            owned = set(models.Books.objects.filter(user=user).values_list('name', flat=True))
+            candidates = [b for b in SAMPLE_BOOKS if b[0] not in owned] or SAMPLE_BOOKS
+            title, author, pages = random.choice(candidates)
+            return self.save_availability(user, title, author, pages, random_availability())
+
 
         if not url:  # checks if url is set by user or url comes with random urls from demo version
             url = request.POST.get('link')
@@ -187,6 +195,11 @@ class BooksAvailability(View):
             for i in range(3):
                 branch.pop(0)
 
+        return self.save_availability(user, title, auth, pages, books_availability)
+
+    def save_availability(self, user, title, auth, pages, books_availability):
+        # saves book and its availability (list of tuples: library short name, location, status) for the user
+
         # retrieving list of libraries by short name
         short_libraries_names_list = [item.short_name for item in models.Libraries.objects.all()]
 
@@ -227,7 +240,8 @@ class BooksAvailability(View):
 
                     add_book = models.Books.objects.get(name=title)
                     library = models.Libraries.objects.get(short_name=library_short_name)
-                    book_libraries_relation = models.BooksLibraries.objects.get(library=library, book=add_book)
+                    book_libraries_relation, _ = models.BooksLibraries.objects.get_or_create(
+                        library=library, book=add_book, defaults={'status': 3, 'location': 'n/a'})
 
                     if book_libraries_relation.status == 3:
                         book_libraries_relation.status = book_status
@@ -253,7 +267,8 @@ class BooksAvailability(View):
 
                     add_book = models.Books.objects.get(name=title)
                     library = models.Libraries.objects.get(short_name=library_short_name)
-                    book_libraries_relation = models.BooksLibraries.objects.get(library=library, book=add_book)
+                    book_libraries_relation, _ = models.BooksLibraries.objects.get_or_create(
+                        library=library, book=add_book, defaults={'status': 3, 'location': 'n/a'})
                     book_libraries_relation.status = book_status
                     book_libraries_relation.location = book_location
                     book_libraries_relation.save()
