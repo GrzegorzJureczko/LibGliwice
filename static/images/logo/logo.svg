@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 120" role="img" aria-label="LibGliwice">
+  <g transform="translate(10 10)">
+    <rect x="0" y="62" width="92" height="16" rx="3" fill="#0d6efd"/>
+    <rect x="8" y="44" width="84" height="16" rx="3" fill="#0a58ca"/>
+    <rect x="0" y="26" width="92" height="16" rx="3" fill="#6ea8fe"/>
+    <rect x="12" y="68" width="30" height="4" rx="2" fill="#fff" opacity=".8"/>
+    <rect x="20" y="50" width="30" height="4" rx="2" fill="#fff" opacity=".8"/>
+    <rect x="12" y="32" width="30" height="4" rx="2" fill="#fff" opacity=".8"/>
+    <path d="M70 0c-12 0-22 9.500-22 21.500C48 37 70 56 70 56s22-19 22-34.500C92 9.500 82 0 70 0z"
+          fill="#ffc107" stroke="#fff" stroke-width="4"/>
+    <circle cx="70" cy="21" r="8" fill="#fff"/>
+  </g>
+  <text x="122" y="68" font-family="Segoe UI, Arial, sans-serif" font-size="46" font-weight="700" fill="#0d6efd">Lib<tspan fill="#212529">Gliwice</tspan></text>
+  <text x="124" y="92" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#6c757d" letter-spacing="1">znajdź swoje książki w jednej filii</text>
+</svg>
