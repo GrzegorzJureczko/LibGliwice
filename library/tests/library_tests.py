@@ -1,5 +1,7 @@
 from django.contrib.auth.models import Permission
 from django.urls import reverse
+from unittest.mock import Mock
+import requests
 from library import models
 
 
@@ -117,6 +119,33 @@ def test_book_availability_form_fail(client, user):
         'link': 'incorrect link'})
     books = models.Books.objects.all()
     assert len(books) == 0
+
+
+def test_book_availability_catalog_http_error_shows_message(client, user, monkeypatch):
+    client.force_login(user)
+    response_from_catalog = Mock(status_code=403)
+    response_from_catalog.raise_for_status.side_effect = requests.HTTPError('403 Forbidden')
+    monkeypatch.setattr('library.views.requests.get', lambda *args, **kwargs: response_from_catalog)
+
+    response = client.post(reverse('library:books_availability'), data={
+        'link': 'https://integro.biblioteka.gliwice.pl/example',
+    }, follow=True)
+
+    assert response.status_code == 200
+    assert 'Nie udało się pobrać danych z katalogu' in response.content.decode('UTF-8')
+
+
+def test_book_availability_catalog_verification_page_shows_message(client, user, monkeypatch):
+    client.force_login(user)
+    response_from_catalog = Mock(status_code=200, text='<html><title>Security check</title></html>')
+    monkeypatch.setattr('library.views.requests.get', lambda *args, **kwargs: response_from_catalog)
+
+    response = client.post(reverse('library:books_availability'), data={
+        'link': 'https://integro.biblioteka.gliwice.pl/example',
+    }, follow=True)
+
+    assert response.status_code == 200
+    assert 'Strona katalogu nie zawiera danych książki' in response.content.decode('UTF-8')
 
 
 def test_book_remove_fail(client, user, book_user_relation_create):
