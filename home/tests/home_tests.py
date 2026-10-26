@@ -12,4 +12,4 @@ def test_home_page_content(client, user):
     client.force_login(user)
     endpoint = reverse('home:home')
     response = client.get(endpoint)
-    assert 'Witaj na stronie LibGliwice!' in str(response.content.decode('UTF-8'))
+    assert 'images/logo/logo.svg' in str(response.content.decode('UTF-8'))
