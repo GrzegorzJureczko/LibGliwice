@@ -148,6 +148,26 @@ def test_book_availability_catalog_verification_page_shows_message(client, user,
     assert 'Strona katalogu nie zawiera danych książki' in response.content.decode('UTF-8')
 
 
+def test_demo_user_random_link_uses_sample_data(client, db, monkeypatch):
+    def fail_on_request(*args, **kwargs):
+        raise AssertionError('demo must not call the catalog')
+
+    monkeypatch.setattr('library.views.requests.get', fail_on_request)
+    from django.contrib.auth import get_user_model
+    demo_user = get_user_model().objects.create(username='demo')
+    models.Libraries.objects.create(name='Filia 40', short_name='F40', address='ul. Polna 7',
+                                    phone='554 778 889', email='filia40@gliwice.pl',
+                                    opening_time='Poniedziałek 8:00-20:00')
+    client.force_login(demo_user)
+
+    response = client.post(reverse('library:books_availability'), data={
+        'link': 'https://integro.biblioteka.gliwice.pl/692900391565/kwan-kevin/bajecznie-bogaci-azjaci?bibFilter=69',
+    })
+
+    assert response.status_code == 302
+    assert models.Books.objects.filter(user=demo_user).count() == 1
+
+
 def test_book_remove_fail(client, user, book_user_relation_create):
     client.force_login(user)
     endpoint = reverse('library:book_remove', args=(1,))
